@@ -9,9 +9,9 @@ namespace DBLayer.Models
 {
     public class User : IdentityUser
     {
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string email { get; set; }
+        public String Name { get; set; }
+        public String Surname { get; set; }
+      
        
     }
 }

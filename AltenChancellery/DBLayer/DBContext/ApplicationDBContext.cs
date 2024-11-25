@@ -13,7 +13,8 @@ namespace DBLayer.DBContext
     public class ApplicationDBContext: IdentityDbContext<User, IdentityRole, string>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
-        { 
+        {
+
         }
 
 
