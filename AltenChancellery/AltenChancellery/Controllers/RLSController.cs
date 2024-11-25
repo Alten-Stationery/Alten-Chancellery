@@ -5,36 +5,35 @@ using ServiceLayer.Services.Interfaces;
 
 namespace AltenChancellery.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class RLSController : ControllerBase
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userservice) 
+        private readonly IUserService _userService; 
+        public RLSController(IUserService userService) 
         {
-            _userService = userservice;
+            _userService = userService;
         }
 
         [HttpPost]
         [Route("AddUser")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO user)
         {
-            try 
+            try
             {
-                List<string> userRoles = new List<string> { UserRoles.User };
+                List<string> userRoles = new List<string> { UserRoles.User, UserRoles.Rls };
                 var res = await _userService.CreateUser(user, userRoles);
-                return Ok(res);
+                return Ok();
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-               return StatusCode(500, ex.Message);
+                return StatusCode(500, ex.Message);
             }
-            
+
         }
         [HttpGet]
         [Route("FindUserById")]
-        public async Task<IActionResult> FindUserById(string id) 
+        public async Task<IActionResult> FindUserById(string id)
         {
             try
             {
@@ -48,7 +47,7 @@ namespace AltenChancellery.Controllers
         }
         [HttpDelete]
         [Route("DeleteUserById")]
-        public async Task<IActionResult> DeleteUserByID(string id)        
+        public async Task<IActionResult> DeleteUserByID(string id)
         {
             try
             {

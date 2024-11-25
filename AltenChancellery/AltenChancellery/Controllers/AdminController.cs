@@ -1,40 +1,41 @@
 ﻿using AltenChancellery.Auth;
+using DBLayer.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.DTOs;
 using ServiceLayer.Services.Interfaces;
 
 namespace AltenChancellery.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class AdminController: ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userservice) 
+        
+        public AdminController(IUserService userService) 
         {
-            _userService = userservice;
+            _userService = userService;
         }
 
         [HttpPost]
         [Route("AddUser")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO user)
         {
-            try 
+            try
             {
-                List<string> userRoles = new List<string> { UserRoles.User };
+                List<string> userRoles = new List<string> { UserRoles.Admin, UserRoles.Rls, UserRoles.User };
                 var res = await _userService.CreateUser(user, userRoles);
                 return Ok(res);
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-               return StatusCode(500, ex.Message);
+                return StatusCode(500, ex.Message);
             }
-            
+
         }
         [HttpGet]
         [Route("FindUserById")]
-        public async Task<IActionResult> FindUserById(string id) 
+        public async Task<IActionResult> FindUserById(string id)
         {
             try
             {
@@ -48,7 +49,7 @@ namespace AltenChancellery.Controllers
         }
         [HttpDelete]
         [Route("DeleteUserById")]
-        public async Task<IActionResult> DeleteUserByID(string id)        
+        public async Task<IActionResult> DeleteUserByID(string id)
         {
             try
             {

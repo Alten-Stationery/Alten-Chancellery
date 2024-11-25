@@ -25,7 +25,8 @@ namespace ServiceLayer.Services.Implementations
             _mapper = mapper;          
         }
 
-        public async Task<Response<UserDTO>> CreateUser(UserDTO userDTO)
+
+        public async Task<Response<UserDTO>> CreateUser(UserDTO userDTO, List<string> userRoles)
         {
             try
             {
@@ -33,9 +34,12 @@ namespace ServiceLayer.Services.Implementations
                 var response = await _userRepository.AddUser(user);
                 
                 if (response == null) return new Response<UserDTO> { Message = "User not Saved", StatusCode = System.Net.HttpStatusCode.InternalServerError };
-                if (await _roleManager.RoleExistsAsync(UserRoles.User))
-                    await _userRepository.AddRole(response, UserRoles.User);
 
+                foreach (var role in userRoles)
+                {
+                    if (await _roleManager.RoleExistsAsync(role))
+                        await _userRepository.AddRole(response, UserRoles.User);
+                }
                 var userDtoToSend = _mapper.Map<UserDTO>(response);
                 return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.OK, Data = userDtoToSend };
             }
