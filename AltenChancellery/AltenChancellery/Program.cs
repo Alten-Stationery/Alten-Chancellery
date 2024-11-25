@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using FluentValidation.AspNetCore;
 using AltenChancellery.Configuration;
 using System.Reflection;
 using ServiceLayer.Auth;
@@ -18,6 +19,8 @@ using Microsoft.AspNetCore.Hosting.Builder;
 using DBLayer.Repositories.Interfaces;
 using DBLayer.Repositories.Implementations;
 using DBLayer.UnitOfWork;
+using FluentValidation;
+using ServiceLayer.FluentValidators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,7 +64,8 @@ builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 
 // Add Blazor and API services
-builder.Services.AddControllers();
+builder.Services.AddValidatorsFromAssembly(typeof(UserValidator).Assembly);
+builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddRazorPages();
 builder.Services.AddSwaggerGen(options =>
@@ -158,14 +162,14 @@ app.Run();
 
 async Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
 {
-    // Definisci i ruoli che vuoi creare
+    // Defination of the roules
     var roleNames = typeof(UserRoles)
                     .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
                     .Where(fi => fi.IsLiteral && !fi.IsInitOnly)
                     .Select(fi => fi.GetValue(null).ToString())
                     .ToList();
 
-    // Crea i ruoli, se non esistono
+    // Creation of the roules
     foreach (var roleName in roleNames)
     {
         if (!await roleManager.RoleExistsAsync(roleName))

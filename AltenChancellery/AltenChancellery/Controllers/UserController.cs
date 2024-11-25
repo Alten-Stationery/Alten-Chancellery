@@ -30,5 +30,49 @@ namespace AltenChancellery.Controllers
             }
             
         }
+        [HttpGet]
+        [Route("FindUserById")]
+        public async Task<IActionResult> FindUserById(string id) 
+        {
+            try
+            {
+                var res = await _userService.FindUserById(id);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpDelete]
+        [Route("DeleteUserById")]
+        public async Task<IActionResult> DeleteUserByID(string id)        
+        {
+            try
+            {
+                var res = await _userService.DeleteUser(id);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateUser")]
+        public async Task<IActionResult> UpdateUser(UserDTO user)
+        {
+            try
+            {
+                var res = await _userService.UpdateUser(user);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
+        }
     }
 }

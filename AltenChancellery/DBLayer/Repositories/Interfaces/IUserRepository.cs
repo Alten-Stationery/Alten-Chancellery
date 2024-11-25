@@ -13,7 +13,7 @@ namespace DBLayer.Repositories.Interfaces
         Task<bool> AddRole(User user, String role);
         Task<User> UpdateUser(User user);
         Task<bool> DeleteUser(User user);
-        Task<User> FindUser(string Id);
+        Task<User> FindUserById(string Id);
         Task<User> FindUserByEmail(string email);
         
     }

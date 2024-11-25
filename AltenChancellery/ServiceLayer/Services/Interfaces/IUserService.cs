@@ -10,6 +10,10 @@ namespace ServiceLayer.Services.Interfaces
     public interface IUserService
     {
         Task<Response<UserDTO>> CreateUser(UserDTO userDTO);
+        Task<Response<bool>> DeleteUser(string id);
+        Task<Response<UserDTO>> FindUserById(string id);
+        Task<Response<UserDTO>> UpdateUser(UserDTO userDTO);
+
 
     }
 }

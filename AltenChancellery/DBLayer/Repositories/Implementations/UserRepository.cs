@@ -60,24 +60,56 @@ namespace DBLayer.Repositories.Implementations
 
         }
 
-        public Task<bool> DeleteUser(User user)
+        public async Task<bool> DeleteUser(User user)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var res = await _userManager.DeleteAsync(user);
+                return res.Succeeded;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
-        public Task<User> FindUser(string Id)
+        public async Task<User> FindUserById(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var res = await _userManager.FindByIdAsync(id);
+                return res;
+            }
+            catch
+            {
+                throw; 
+            }
         }
 
-        public Task<User> FindUserByEmail(string email)
+        public async Task<User> FindUserByEmail(string email)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var res = await _userManager.FindByEmailAsync(email);
+                return res;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
-        public Task<User> UpdateUser(User user)
+        public async Task<User> UpdateUser(User user)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var res = await _userManager.UpdateAsync(user);
+                return user;
+            }
+            catch 
+            {
+                throw;
+            }
         }
     }
 }

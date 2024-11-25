@@ -44,5 +44,52 @@ namespace ServiceLayer.Services.Implementations
                 return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = $"Error: {ex.Message}" };
             }
         }
+
+        public async Task<Response<bool>> DeleteUser(string id)
+        {
+            try
+            {
+                var userToDelete = await _userRepository.FindUserById(id);
+                var res = await _userRepository.DeleteUser(userToDelete);
+                if(res) return new Response<bool> {StatusCode = System.Net.HttpStatusCode.OK,  Data=res};
+                return new Response<bool> { Data = res, StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error: User not Removed" };
+            }
+            catch (Exception ex)
+            {
+                return new Response<bool> { Message = ex.Message, StatusCode = System.Net.HttpStatusCode.InternalServerError };
+            }
+        }
+
+        public async Task<Response<UserDTO>> FindUserById(string id)
+        {
+            try
+            {
+                var user = await _userRepository.FindUserById(id);
+                if (user is null) return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "User not Found" };
+                var userToSend = _mapper.Map<UserDTO>(user);
+                return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.OK, Data = userToSend };
+
+            }
+            catch (Exception ex)
+            {
+                return new Response<UserDTO> { Message = ex.Message, StatusCode = System.Net.HttpStatusCode.InternalServerError };
+            }
+        }
+
+        public async Task<Response<UserDTO>> UpdateUser(UserDTO userDTO)
+        {
+            try
+            {
+                var userToUpdate = _mapper.Map<User>(userDTO);
+                var res = await _userRepository.UpdateUser(userToUpdate);
+                if (res is null) return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Error during User Update" };
+                var userToSend = _mapper.Map<UserDTO>(res);
+                return new Response<UserDTO> {StatusCode = System.Net.HttpStatusCode.OK,Data = userToSend};
+            }
+            catch (Exception ex)
+            {
+                return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = ex.Message };
+            }
+        }
     }
 }
