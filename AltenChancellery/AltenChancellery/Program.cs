@@ -7,6 +7,17 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
+using AltenChancellery.Configuration;
+using System.Reflection;
+using ServiceLayer.Auth;
+using ServiceLayer.Services.Interfaces;
+using ServiceLayer.Services.Implementations;
+using Microsoft.AspNetCore.Hosting.Builder;
+using DBLayer.Repositories.Interfaces;
+using DBLayer.Repositories.Implementations;
+using DBLayer.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +43,22 @@ builder.Services.AddDbContext<ApplicationDBContext>(
 // Add swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//Add Automapper config
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new MappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
+
+//Add Serices
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
 
 // Add Blazor and API services
 builder.Services.AddControllers();
@@ -94,6 +121,12 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
+var scope = app.Services.CreateScope();
+var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+
+//Create role and seed
+await SeedRolesAndAdminUser(roleManager, userManager);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -122,3 +155,24 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();
+
+async Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+{
+    // Definisci i ruoli che vuoi creare
+    var roleNames = typeof(UserRoles)
+                    .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                    .Where(fi => fi.IsLiteral && !fi.IsInitOnly)
+                    .Select(fi => fi.GetValue(null).ToString())
+                    .ToList();
+
+    // Crea i ruoli, se non esistono
+    foreach (var roleName in roleNames)
+    {
+        if (!await roleManager.RoleExistsAsync(roleName))
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+
+
+}

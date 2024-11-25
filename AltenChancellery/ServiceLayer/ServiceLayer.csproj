@@ -8,9 +8,14 @@
 
   <ItemGroup>
     <Folder Include="FluentValidators\" />
-    <Folder Include="DTOs\" />
-    <Folder Include="Services\Implementations\" />
-    <Folder Include="Services\Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DBLayer\DBLayer.csproj" />
   </ItemGroup>
 
 </Project>
