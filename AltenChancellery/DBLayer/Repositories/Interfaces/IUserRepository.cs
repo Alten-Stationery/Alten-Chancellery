@@ -10,6 +10,7 @@ namespace DBLayer.Repositories.Interfaces
     public interface IUserRepository
     {
         Task<User?> AddUser(User user);
+        Task<bool> UserExist(string email);
         Task<bool> AddRole(User user, String role);
         Task<User> UpdateUser(User user);
         Task<bool> DeleteUser(User user);

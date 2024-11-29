@@ -18,24 +18,71 @@ namespace ServiceLayer.Services.Implementations
         private readonly IUserRepository _userRepository;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
-        public UserService(IUserRepository userRepository, RoleManager<IdentityRole> roleManager, IMapper mapper) 
+        private readonly UserManager<User> _userManager;
+        public UserService(IUserRepository userRepository, RoleManager<IdentityRole> roleManager, IMapper mapper, UserManager<User> userManager) 
         { 
             _userRepository = userRepository;
+            _userManager = userManager;
             _roleManager = roleManager;
             _mapper = mapper;          
         }
-
         public async Task<Response<UserDTO>> CreateUser(UserDTO userDTO)
         {
             try
             {
+                List<string> roles = new List<string>() { UserRoles.User };
+                var response = await CreateUser(userDTO, roles);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = $"Error: {ex.Message}" };
+            }
+        }
+        public async Task<Response<UserDTO>> CreateRLS(UserDTO userDTO)
+        {
+            try
+            {
+                List<string> roles = new List<string>() { UserRoles.User, UserRoles.Rls };
+                var response = await CreateUser(userDTO, roles);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = $"Error: {ex.Message}" };
+            }
+        }
+        
+        public async Task<Response<UserDTO>> CreateAdmin(UserDTO userDTO)
+        {
+            try 
+            {
+                List<string> roles = new List<string>() { UserRoles.User, UserRoles.Rls, UserRoles.Admin };
+                var response = await CreateUser(userDTO, roles);
+                return response;
+            }
+            catch(Exception ex)
+            {
+                return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = $"Error: {ex.Message}" };
+            }
+        }
+        
+        private async Task<Response<UserDTO>> CreateUser(UserDTO userDTO, List<string> userRoles)
+        {
+            try
+            { 
                 var user = _mapper.Map<User>(userDTO);
+                if (userDTO == null) throw new ArgumentNullException(nameof(userDTO), "User cannot be null");
+                if (await _userRepository.UserExist(userDTO.Email)) throw new Exception("User Already exist");
                 var response = await _userRepository.AddUser(user);
                 
                 if (response == null) return new Response<UserDTO> { Message = "User not Saved", StatusCode = System.Net.HttpStatusCode.InternalServerError };
-                if (await _roleManager.RoleExistsAsync(UserRoles.User))
-                    await _userRepository.AddRole(response, UserRoles.User);
 
+                foreach (var role in userRoles)
+                {
+                    if (await _roleManager.RoleExistsAsync(role))
+                        await _userRepository.AddRole(response, role);
+                }
                 var userDtoToSend = _mapper.Map<UserDTO>(response);
                 return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.OK, Data = userDtoToSend };
             }
@@ -80,6 +127,7 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
+                if (userDTO == null) throw new ArgumentNullException(nameof(userDTO), "User cannot be null");  
                 var userToUpdate = _mapper.Map<User>(userDTO);
                 var res = await _userRepository.UpdateUser(userToUpdate);
                 if (res is null) return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Error during User Update" };

@@ -33,18 +33,25 @@ namespace DBLayer.Repositories.Implementations
             }
 
         }
-
+        public async Task<bool> UserExist(string email) 
+        {
+            try
+            {
+                if(await _userManager.FindByEmailAsync(email) == null) return false;
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         public async Task<User?> AddUser(User user)
         {
-            if (user == null) throw new ArgumentNullException(nameof(user), "User cannot be null");
+            
 
             try
             {
-                var userExist = await _userManager.FindByEmailAsync(user.Email);
-                if (userExist != null)
-                {
-                    return null;
-                }
+                
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
                 if (result.Succeeded)
                 {
