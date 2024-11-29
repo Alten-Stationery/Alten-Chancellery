@@ -13,9 +13,7 @@ namespace ServiceLayer.FluentValidators
         private const string passwordRegex = @"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$";
         public UserValidator() 
         {
-            RuleFor(u => u.Id)
-                .NotEmpty().WithMessage("Id is mandatory");
-            
+          
             RuleFor(u => u.Email)
             .NotEmpty().WithMessage("Email is mandatory")
             .EmailAddress().WithMessage("Insert a valid email");

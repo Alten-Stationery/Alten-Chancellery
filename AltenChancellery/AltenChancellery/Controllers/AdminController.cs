@@ -22,9 +22,8 @@ namespace AltenChancellery.Controllers
         public async Task<IActionResult> AddUser([FromBody] UserDTO user)
         {
             try
-            {
-                List<string> userRoles = new List<string> { UserRoles.Admin, UserRoles.Rls, UserRoles.User };
-                var res = await _userService.CreateUser(user, userRoles);
+            { 
+                var res = await _userService.CreateAdmin(user);
                 return Ok(res);
             }
             catch (Exception ex)

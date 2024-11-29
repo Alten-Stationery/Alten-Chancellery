@@ -22,8 +22,7 @@ namespace AltenChancellery.Controllers
         {
             try 
             {
-                List<string> userRoles = new List<string> { UserRoles.User };
-                var res = await _userService.CreateUser(user, userRoles);
+                var res = await _userService.CreateUser(user);
                 return Ok(res);
             }
             catch(Exception ex) 

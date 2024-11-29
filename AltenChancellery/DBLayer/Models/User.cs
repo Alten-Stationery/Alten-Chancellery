@@ -9,8 +9,10 @@ namespace DBLayer.Models
 {
     public class User : IdentityUser
     {
-        public String Name { get; set; }
-        public String Surname { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string? OfficeId { get; set; }
+        public virtual Office Office { get; set; }
       
        
     }

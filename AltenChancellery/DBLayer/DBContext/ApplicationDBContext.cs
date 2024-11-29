@@ -16,7 +16,14 @@ namespace DBLayer.DBContext
         {
 
         }
-
+        public DbSet<Office> Office { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<User>()
+                .Property(e => e.Id)
+                .HasDefaultValue("NEWID()");
+        }
 
     }
 }
