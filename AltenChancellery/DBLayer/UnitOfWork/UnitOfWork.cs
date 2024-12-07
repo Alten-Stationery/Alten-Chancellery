@@ -1,4 +1,6 @@
 ﻿using DBLayer.DBContext;
+using DBLayer.Repositories.Implementations;
+using DBLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,11 +19,11 @@ namespace DBLayer.UnitOfWork
         public UnitOfWork(ApplicationDBContext context)
         {
             _context = context;
-
+            OfficeRepository = new OfficeRepository(_context);
 
         }
 
-
+        public IOfficeRepository OfficeRepository { get; private set; }
 
         public async Task<int> Save()
         {

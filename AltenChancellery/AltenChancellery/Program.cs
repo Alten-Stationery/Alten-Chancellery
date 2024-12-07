@@ -57,9 +57,13 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 
-//Add Serices
+//Add Services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IOfficeService, OfficeService>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IOfficeRepository, OfficeRepository>();
+
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 
