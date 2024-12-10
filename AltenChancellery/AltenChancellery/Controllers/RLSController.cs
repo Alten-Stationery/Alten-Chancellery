@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AltenChancellery.Auth;
+using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.DTOs;
 using ServiceLayer.Services.Interfaces;
 
@@ -21,7 +22,7 @@ namespace AltenChancellery.Controllers
             try
             {
                 
-                var res = await _userService.CreateRLSAsync(user);
+                var res = await _userService.CreateRLS(user);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -36,7 +37,7 @@ namespace AltenChancellery.Controllers
         {
             try
             {
-                var res = await _userService.FindUserByIdAsync(id);
+                var res = await _userService.FindUserById(id);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -50,7 +51,7 @@ namespace AltenChancellery.Controllers
         {
             try
             {
-                var res = await _userService.DeleteUserAsync(id);
+                var res = await _userService.DeleteUser(id);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -65,7 +66,7 @@ namespace AltenChancellery.Controllers
         {
             try
             {
-                var res = await _userService.UpdateUserAsync(user);
+                var res = await _userService.UpdateUser(user);
                 return Ok(res);
             }
             catch (Exception ex)

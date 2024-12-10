@@ -1,4 +1,5 @@
-﻿using DBLayer.Repositories.Interfaces;
+﻿using AltenChancellery.Auth;
+using DBLayer.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.DTOs;
 using ServiceLayer.Services.Interfaces;
@@ -17,12 +18,12 @@ namespace AltenChancellery.Controllers
         }
 
         [HttpPost]
-        [Route("AddAdmin")]
-        public async Task<IActionResult> AddAdmin([FromBody] UserDTO user)
+        [Route("AddUser")]
+        public async Task<IActionResult> AddUser([FromBody] UserDTO user)
         {
             try
             { 
-                var res = await _userService.CreateAdminAsync(user);
+                var res = await _userService.CreateAdmin(user);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -37,7 +38,7 @@ namespace AltenChancellery.Controllers
         {
             try
             {
-                var res = await _userService.FindUserByIdAsync(id);
+                var res = await _userService.FindUserById(id);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -51,7 +52,7 @@ namespace AltenChancellery.Controllers
         {
             try
             {
-                var res = await _userService.DeleteUserAsync(id);
+                var res = await _userService.DeleteUser(id);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -66,7 +67,7 @@ namespace AltenChancellery.Controllers
         {
             try
             {
-                var res = await _userService.UpdateUserAsync(user);
+                var res = await _userService.UpdateUser(user);
                 return Ok(res);
             }
             catch (Exception ex)
