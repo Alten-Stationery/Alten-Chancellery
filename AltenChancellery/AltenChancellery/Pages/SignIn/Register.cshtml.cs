@@ -49,9 +49,9 @@ namespace AltenChancellery.Pages
             SignInResult signInResult = await _signInManager.PasswordSignInAsync(user!, password, true, false);
 
             if(!signInResult.Succeeded)
-                Redirect("/Login"); // TODO: redirect with error
+                Redirect("/Error"); // TODO: redirect with error
             
-            Redirect("../"); 
+            Redirect("../");
         }
     }
 }

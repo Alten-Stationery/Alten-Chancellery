@@ -7,5 +7,6 @@ namespace DBLayer.Repositories.Interfaces
         bool CreateOrUpdate(RefreshToken refreshToken);
         RefreshToken? GetByTokenString(string refreshToken);
         RefreshToken? GetByUserId(string userId);
+        string GetUserIdByTokenString(string refreshToken);
     }
 }

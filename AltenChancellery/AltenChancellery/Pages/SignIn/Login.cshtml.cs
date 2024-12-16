@@ -1,8 +1,8 @@
 using DBLayer.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceLayer.Constants.Auth;
-using ServiceLayer.DTOs;
 using ServiceLayer.Services.Interfaces;
 
 namespace AltenChancellery.Pages
@@ -22,52 +22,45 @@ namespace AltenChancellery.Pages
             _roleService = roleService;
         }
 
-        public void OnGet() { }
-
-        [NonHandler]
-        public async Task OnGetTokenCheck(RefreshToken storedRefreshToken)
+        public void OnGet()
         {
-            if (storedRefreshToken.ExpirationDate < DateTime.UtcNow)
-                Redirect("/Login"); // Refresh token expired, need new one from login process
-
-            Tokens tokens = await _tokenService.RefreshToken(storedRefreshToken);
-
-            UpdateTokensInCookies(tokens.AccessToken, tokens.RefreshToken);
-
-            Redirect("../Index");
+            
         }
 
-        public async Task OnPostAsync(string email, string password)
+        public async Task<IActionResult> OnPostAsync(string email, string password)
         {
             User? currentUser = await _signInManager.UserManager.FindByEmailAsync(email);
 
-            if (currentUser is not null)
+            if (currentUser is not null && await _signInManager.UserManager.CheckPasswordAsync(currentUser, password))
             {
-                if (await _signInManager.UserManager.CheckPasswordAsync(currentUser, password))
-                {
-                    IList<string> roles = await _signInManager.UserManager.GetRolesAsync(currentUser);
+                IList<string> roles = await _signInManager.UserManager.GetRolesAsync(currentUser);
 
-                    IdentityRole role = _roleService.GetHighestRoleOfUser(roles);
+                IdentityRole role = _roleService.GetHighestRoleOfUser(roles);
 
-                    // generate tokens
-                    string accessToken = _tokenService.GenerateJwtAccessToken(currentUser, role);
-                    RefreshToken refreshToken = _tokenService.GenerateRefreshToken(currentUser);
-                    //
+                // generate tokens
+                string accessToken = _tokenService.GenerateJwtAccessToken(currentUser, role);
+                RefreshToken refreshToken = _tokenService.GenerateRefreshToken(currentUser);
+                //
 
-                    // save refresh token to DB
-                    bool saveResult = _tokenService.SaveRefreshToken(refreshToken);
+                // save refresh token to DB
+                bool saveResult = _tokenService.SaveRefreshToken(refreshToken);
 
-                    if (!saveResult)
-                        Redirect("../Error");
+                if (!saveResult)
+                    return Redirect("../Error");
 
-                    // save tokens in cookies
-                    UpdateTokensInCookies(accessToken, refreshToken.Token!);
+                // save tokens in cookies & in header
+                UpdateTokensInHeader(accessToken, refreshToken.Token);
+                UpdateTokensInCookies(accessToken, refreshToken.Token!);
 
-                    Redirect("/");
-                }
-                else Unauthorized();
+                return Redirect("/");
             }
-            else NotFound();
+            else return Page();
+        }
+
+        private void UpdateTokensInHeader(string accessToken, string refreshToken)
+        {
+            HttpContext.Response.Headers.Append(TokenConst.AccessToken, accessToken);
+            HttpContext.Response.Headers.Append(TokenConst.RefreshToken, refreshToken);
         }
 
         private void UpdateTokensInCookies(string accessToken, string refreshToken)

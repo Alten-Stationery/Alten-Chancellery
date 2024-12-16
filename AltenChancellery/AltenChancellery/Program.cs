@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using FluentValidation.AspNetCore;
 using AltenChancellery.Configuration;
 using System.Reflection;
-using ServiceLayer.Auth;
 using ServiceLayer.Services.Interfaces;
 using ServiceLayer.Services.Implementations;
 using Microsoft.AspNetCore.Hosting.Builder;
@@ -21,6 +20,12 @@ using DBLayer.Repositories.Implementations;
 using DBLayer.UnitOfWork;
 using FluentValidation;
 using ServiceLayer.FluentValidators;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using ServiceLayer.Constants.Auth;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using ServiceLayer.Cache;
+using Microsoft.Extensions.Caching.Memory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,7 +63,16 @@ builder.Services.AddSingleton(mapper);
 
 
 //Add Serices
+
+// cache
+builder.Services.AddSingleton<IMemoryCache, MemoryCache>();
+builder.Services.AddScoped<ICacheManager, CacheManager>();
+//
+
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
@@ -67,7 +81,13 @@ builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddValidatorsFromAssembly(typeof(UserValidator).Assembly);
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddRazorPages();
+
+builder.Services.AddRazorPages(options =>
+{
+    //options.Conventions.AuthorizePage("/Index");
+    //options.Conventions.AuthorizeFolder("/SignIn");
+});
+
 builder.Services.AddSwaggerGen(options =>
 {
 
@@ -105,6 +125,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    //options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
@@ -117,9 +138,20 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
+        RequireExpirationTime = true,
         ValidAudience = configuration["JWT:ValidAudience"],
         ValidIssuer = configuration["JWT:ValidIssuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies[TokenConst.AccessToken];
+            return Task.CompletedTask;
+        }
     };
 });
 
