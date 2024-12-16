@@ -12,11 +12,14 @@ namespace DBLayer.DBContext
 {
     public class ApplicationDBContext: IdentityDbContext<User, IdentityRole, string>
     {
+        public DbSet<Office> Office { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
 
         }
-        public DbSet<Office> Office { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
