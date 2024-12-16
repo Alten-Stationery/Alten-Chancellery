@@ -14,6 +14,8 @@ namespace AltenChancellery.Configuration
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.PasswordHash))
                 .ReverseMap();
 
+            CreateMap<Office, OfficeDTO>().ReverseMap();
+
         }
     }
 }

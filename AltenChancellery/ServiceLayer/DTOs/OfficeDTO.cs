@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DBLayer.Models
+namespace ServiceLayer.DTOs
 {
-    public class Office
+    public class OfficeDTO
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string? Address { get; set; }
-        public virtual List<User> Users { get; set; }
+        public string Address { get; set; }
+
     }
 }

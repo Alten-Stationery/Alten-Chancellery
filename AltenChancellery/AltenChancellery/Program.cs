@@ -56,7 +56,8 @@ IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
 
-//Add Serices
+
+//Add Services
 
 // cache
 builder.Services.AddSingleton<IMemoryCache, MemoryCache>();
@@ -66,8 +67,12 @@ builder.Services.AddScoped<ICacheManager, CacheManager>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IOfficeService, OfficeService>();
+
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IOfficeRepository, OfficeRepository>();
+
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 
