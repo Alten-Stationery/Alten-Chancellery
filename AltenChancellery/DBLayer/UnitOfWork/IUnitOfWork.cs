@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DBLayer.Repositories.Interfaces;
 
 namespace DBLayer.UnitOfWork
 {
     public interface IUnitOfWork
     {
-        Task<int> Save();
+        IRefreshTokenRepository RefreshTokenRepo { get; }
+        IUserRepository UserRepo { get; }
+
+        int Save();
+        Task<int> SaveAsync();
     }
 }

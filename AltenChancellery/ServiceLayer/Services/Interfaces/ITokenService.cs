@@ -12,5 +12,8 @@ namespace ServiceLayer.Services.Interfaces
         Task<Tokens> RefreshToken(RefreshToken currentRefreshToken);
         RefreshToken? GetTokenByStringValue(string refreshToken);
         bool DeleteToken(string refreshToken);
+        bool IsRefreshTokenValid(string refreshToken);
+        bool IsAccessTokenValid(string accessToken);
+        Task<User> GetUserByRefreshToken(string refreshToken);
     }
 }

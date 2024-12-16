@@ -29,5 +29,14 @@ namespace ServiceLayer.Services.Implementations
                 return _roleManager.Roles.First(f => f.Name!.ToUpper() == highestRole);
             }
         }
+
+        #region Exposing Role Manager methods ONLY through this interface
+
+        public async Task<bool> RoleExistsAsync(string roleName)
+        {
+            return await _roleManager.RoleExistsAsync(roleName);
+        }
+
+        #endregion
     }
 }

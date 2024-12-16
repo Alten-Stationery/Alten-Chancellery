@@ -1,11 +1,8 @@
 ﻿using DBLayer.Models;
-using DBLayer.Repositories.Interfaces;
 using DBLayer.UnitOfWork;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using ServiceLayer.Constants.Auth;
 using ServiceLayer.DTOs;
 using ServiceLayer.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -55,7 +52,7 @@ namespace ServiceLayer.Services.Implementations
                 _config["JWT:Issuer"],
                 _config["JWT:Audience"],
                 claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["AccessTokenExpirationInMinutes"])),
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["JWT:AccessTokenExpirationInMinutes"])),
                 signingCredentials: credentials
                 );
 
@@ -66,8 +63,7 @@ namespace ServiceLayer.Services.Implementations
         {
             return new RefreshToken()
             {
-                //ExpirationDate = DateTime.UtcNow.AddHours(Convert.ToDouble(_config["RefreshTokenExpiryInDays"])),
-                ExpirationDate = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["RefreshTokenExpiryInMinutes"])),
+                ExpirationDate = DateTime.UtcNow.AddHours(Convert.ToDouble(_config["JWT:RefreshTokenExpiryInHours"])),
                 Token = Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
                 UserId = user.Id
             };
@@ -76,7 +72,10 @@ namespace ServiceLayer.Services.Implementations
         public async Task<Tokens> RefreshToken(RefreshToken currentRefreshToken)
         {
             User? currentUser = await _uow.UserRepo.FindUserById(currentRefreshToken.UserId);
-            IdentityRole? userRole = _roleService.GetHighestRoleOfUser(await _userService.GetRolesAsync(currentUser));
+
+            IList<string> roleList = await _userService.GetRolesAsync(currentUser);
+
+            IdentityRole? userRole = _roleService.GetHighestRoleOfUser(roleList);
 
             string jwtToken = GenerateJwtAccessToken(currentUser, userRole);
             return new Tokens() { AccessToken = jwtToken, RefreshToken = currentRefreshToken.Token };
@@ -93,9 +92,34 @@ namespace ServiceLayer.Services.Implementations
 
             bool result = _uow.RefreshTokenRepo.Delete(token);
 
-            if (result) _uow.Save();
+            if (result) _uow.SaveAsync();
 
             return result;
+        }
+
+        public bool IsRefreshTokenValid(string refreshToken)
+        {
+            RefreshToken? token = _uow.RefreshTokenRepo.GetByTokenString(refreshToken);
+
+            if (token == null) return false;
+
+            if (token.ExpirationDate < DateTime.UtcNow) return false;
+
+            return true;
+        }
+
+        public bool IsAccessTokenValid(string accessToken)
+        {
+            JwtSecurityToken token = new JwtSecurityToken(accessToken);
+
+            return token.ValidTo > DateTime.UtcNow;
+        }
+
+        public async Task<User> GetUserByRefreshToken(string refreshToken)
+        {
+            string userId = _uow.RefreshTokenRepo.GetUserIdByTokenString(refreshToken);
+
+            return await _uow.UserRepo.FindUserById(userId);
         }
     }
 }
