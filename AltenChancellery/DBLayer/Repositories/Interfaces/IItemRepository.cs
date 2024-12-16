@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace DBLayer.Repositories.Interfaces
 {
-    public interface IOfficeRepository : IGenericRepository<Office, int>
+    public interface IItemRepository : IGenericRepository<Item, int>
     {
-
     }
 }

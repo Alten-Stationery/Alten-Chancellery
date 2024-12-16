@@ -10,6 +10,8 @@ namespace DBLayer.UnitOfWork
     public interface IUnitOfWork :IDisposable
     {
         IOfficeRepository OfficeRepository { get; }
+        IItemOfficeRepository itemOfficeRepository { get; }
+        IItemRepository itemRepository { get; }
         Task<int> Save();
     }
 }

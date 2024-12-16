@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Services.Interfaces
 {
-    public interface IOfficeService : GenericServices<OfficeDTO, int>
+    public interface IItemService : GenericServices<ItemDTO, int>
     {
-        
+       
     }
 }

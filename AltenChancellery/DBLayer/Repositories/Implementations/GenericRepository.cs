@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DBLayer.Repositories.Implementations
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T, TID> : IGenericRepository<T, TID> where T : class
     {
         private readonly ApplicationDBContext _context;
         private protected DbSet<T> _dbSet;
@@ -55,7 +55,7 @@ namespace DBLayer.Repositories.Implementations
             }
         }
 
-        public async Task<T?> FindAsync(string id)
+        public async Task<T?> FindAsync(TID id)
         {
             try
             {

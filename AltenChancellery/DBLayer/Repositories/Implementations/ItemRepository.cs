@@ -9,11 +9,9 @@ using System.Threading.Tasks;
 
 namespace DBLayer.Repositories.Implementations
 {
-    public class OfficeRepository : GenericRepository<Office, int>,  IOfficeRepository
+    public class ItemRepository: GenericRepository<Item, int> , IItemRepository
     {
-        public OfficeRepository(ApplicationDBContext context) : base(context) 
-        {
-        }    
-
+        public ItemRepository(ApplicationDBContext context) : base(context) 
+        { }
     }
 }
