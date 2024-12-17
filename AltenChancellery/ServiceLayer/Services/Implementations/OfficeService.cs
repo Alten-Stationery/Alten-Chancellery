@@ -23,14 +23,17 @@ namespace ServiceLayer.Services.Implementations
             _mapper = mapper;
             
         }
-        public async Task<Response<OfficeDTO>> AddOffice(OfficeDTO officeDTO)
+        public async Task<Response<OfficeDTO>> AddOfficeAsync(OfficeDTO officeDTO)
         {
             try 
             {
                 var office = _mapper.Map<Office>(officeDTO);
-                var res = await _unitOfWork.OfficeRepository.CreateAsync(office);
+                var res = _unitOfWork.OfficeRepository.Create(office);
                 if (res == null) return new Response<OfficeDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error saving the Office" };
                 var officeToSend = _mapper.Map<OfficeDTO>(res);
+
+                await _unitOfWork.SaveAsync();
+
                 return new Response<OfficeDTO> {StatusCode = System.Net.HttpStatusCode.OK, Data = officeToSend };
             }
             catch(Exception ex) 
@@ -39,7 +42,7 @@ namespace ServiceLayer.Services.Implementations
             }
         }
 
-        public async Task<Response<List<OfficeDTO>>> GetAllOffices()
+        public async Task<Response<List<OfficeDTO>>> GetAllOfficesAsync()
         {
             try
             {
@@ -54,7 +57,7 @@ namespace ServiceLayer.Services.Implementations
             }
         }
 
-        public async Task<Response<OfficeDTO>> GetOfficeById(string id)
+        public async Task<Response<OfficeDTO>> GetOfficeByIdAsync(string id)
         {
             try
             {
@@ -69,29 +72,38 @@ namespace ServiceLayer.Services.Implementations
             }
         }
 
-        public async Task<Response<bool>> RemoveOffice(string officeId)
+        public async Task<Response<bool>> RemoveOfficeAsync(string officeId)
         {
             try
             {
-                var office = _unitOfWork.OfficeRepository.FindAsync(officeId);
+                var office = _unitOfWork.OfficeRepository.Find(officeId);
                 if (office is null) { return new Response<bool> {StatusCode = System.Net.HttpStatusCode.NotFound, Data = false}; }
+
+                bool isDeleted = _unitOfWork.OfficeRepository.Delete(office);
+                if(!isDeleted) { return new Response<bool> { StatusCode = System.Net.HttpStatusCode.NotFound, Data = false }; }
+
+                await _unitOfWork.SaveAsync();
+
                 var officeDTO = _mapper.Map<OfficeDTO>(office);
                 return new Response<bool> { StatusCode = System.Net.HttpStatusCode.OK, Data = true };
             }
             catch (Exception ex)
             {
-                return new Response<bool> { StatusCode=System.Net.HttpStatusCode.InternalServerError,Data = false};
+                return new Response<bool> { StatusCode=System.Net.HttpStatusCode.InternalServerError,Data = false, Message = ex.Message};
             }
         }
 
-        public async Task<Response<OfficeDTO>> UpdateOffice(OfficeDTO officeDTO)
+        public async Task<Response<OfficeDTO>> UpdateOfficeAsync(OfficeDTO officeDTO)
         {
             try
             {
                 var office = _mapper.Map<Office>(officeDTO);
-                var res = await _unitOfWork.OfficeRepository.UpdateAsync(office);
+                var res = _unitOfWork.OfficeRepository.Update(office);
                 if (!res) return new Response<OfficeDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error during Updating the office" };
                 var officeDTOToSend = _mapper.Map<OfficeDTO>(res);
+
+                await _unitOfWork.SaveAsync();
+
                 return new Response<OfficeDTO> { StatusCode = System.Net.HttpStatusCode.Accepted, Data = officeDTOToSend };
             }
             catch (Exception ex)

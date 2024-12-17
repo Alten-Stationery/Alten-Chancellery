@@ -52,7 +52,7 @@ namespace DBLayer.Repositories.Implementations
             }
         }
 
-        public T? Find(string id)
+        public T? Find<K>(K id)
         {
             try
             {
@@ -62,6 +62,11 @@ namespace DBLayer.Repositories.Implementations
             {
                 throw;
             }
+        }
+
+        public async Task<T?> FindAsync<K>(K id)
+        {
+            return await _dbSet.FindAsync(id);
         }
 
         public async Task<List<T>> GetAllAsync()

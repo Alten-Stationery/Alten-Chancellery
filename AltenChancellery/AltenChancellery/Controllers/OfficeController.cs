@@ -19,7 +19,7 @@ namespace AltenChancellery.Controllers
         [Route("CreateOffice")]
         public async Task<IActionResult> CreateOffice(OfficeDTO officeDTO)
         {
-            var res = await _officeService.AddOffice(officeDTO);
+            var res = await _officeService.AddOfficeAsync(officeDTO);
             return Ok(res);
         }
 
@@ -28,7 +28,7 @@ namespace AltenChancellery.Controllers
         [Route("GetOfficebyId")]
         public async Task<IActionResult> GetOfficeById(string officeId)
         {
-            var res = await _officeService.GetOfficeById(officeId);
+            var res = await _officeService.GetOfficeByIdAsync(officeId);
             return Ok(res);
         }
 
@@ -36,7 +36,7 @@ namespace AltenChancellery.Controllers
         [Route("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var res = await _officeService.GetAllOffices();
+            var res = await _officeService.GetAllOfficesAsync();
             return Ok(res);
         }
 
@@ -44,7 +44,7 @@ namespace AltenChancellery.Controllers
         [Route("UpdateOffice")]
         public async Task<IActionResult> Update(OfficeDTO officeDTO)
         { 
-            var res = await _officeService.UpdateOffice(officeDTO);
+            var res = await _officeService.UpdateOfficeAsync(officeDTO);
             return Ok(res);
         }
 
@@ -52,7 +52,7 @@ namespace AltenChancellery.Controllers
         [Route("DeleteOffice")]
         public async Task<IActionResult> DeleteOffice(string officeId)
         { 
-            var res = await _officeService.RemoveOffice(officeId);
+            var res = await _officeService.RemoveOfficeAsync(officeId);
             return Ok(res);
         }
     }

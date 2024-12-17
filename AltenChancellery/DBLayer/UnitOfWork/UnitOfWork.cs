@@ -12,13 +12,13 @@ namespace DBLayer.UnitOfWork
 
         private readonly ApplicationDBContext _context;
 
-        public UnitOfWork(ApplicationDBContext context, IUserRepository userRepo, I)
+        public UnitOfWork(ApplicationDBContext context, IUserRepository userRepo)
         {
             _context = context;
 
-
             UserRepo = userRepo;
-            RefreshTokenRepo = new RefreshTokenRepository(context);
+            RefreshTokenRepo = new RefreshTokenRepository(_context);
+            OfficeRepository = new OfficeRepository(_context);
         }
 
         public int Save()
@@ -27,25 +27,8 @@ namespace DBLayer.UnitOfWork
         }
 
         public async Task<int> SaveAsync()
-
-            OfficeRepository = new OfficeRepository(_context);
-
-        }
-
-        
-
-        public async Task<int> Save()
-
         {
-            try
-            {
-                return await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                throw;
-            }
-
+            return await _context.SaveChangesAsync();
         }
 
         public void Dispose()

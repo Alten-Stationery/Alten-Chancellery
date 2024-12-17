@@ -9,7 +9,8 @@ namespace DBLayer.Repositories.Interfaces
     public  interface IGenericRepository<T> where T: class
     {
         T Create(T entity);
-        T? Find(string id);
+        T? Find<K>(K id);
+        Task<T?> FindAsync<K>(K id);
         Task<List<T>> GetAllAsync();
         bool Update(T entity);
         bool Delete(T entity);
