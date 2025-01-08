@@ -16,7 +16,7 @@ namespace ServiceLayer.Services.Interfaces
         #region Exposing UserManager methods ONLY through this interface
 
         Task<IList<string>> GetRolesAsync(User user);
-
+        
 
         #endregion
 

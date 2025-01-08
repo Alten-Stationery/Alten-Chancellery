@@ -23,7 +23,7 @@ namespace ServiceLayer.Services.Implementations
         {
             _mapper = mapper;
             _uow = uow;
-
+            
             _userManager = userManager;
             _roleService = roleService;
         }

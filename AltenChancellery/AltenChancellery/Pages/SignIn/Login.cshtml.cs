@@ -46,15 +46,17 @@ namespace AltenChancellery.Pages
                 bool saveResult = _tokenService.SaveRefreshToken(refreshToken);
 
                 if (!saveResult)
-                    return Redirect("../Error");
-
+                    return Redirect("/Error");
+                
                 // save tokens in cookies & in header
                 UpdateTokensInHeader(accessToken, refreshToken.Token);
                 UpdateTokensInCookies(accessToken, refreshToken.Token!);
 
+                await _signInManager.SignInAsync(currentUser, true);
+
                 return Redirect("/");
             }
-            else return Page();
+            else return Page(); // wrong password
         }
 
         private void UpdateTokensInHeader(string accessToken, string refreshToken)
