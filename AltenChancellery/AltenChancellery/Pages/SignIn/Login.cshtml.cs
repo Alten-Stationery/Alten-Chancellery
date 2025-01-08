@@ -11,15 +11,13 @@ namespace AltenChancellery.Pages
     {
         private readonly SignInManager<User> _signInManager;
 
-        private readonly IRoleService _roleService;
         private readonly ITokenService _tokenService;
 
-        public LoginModel(ITokenService tokenService, SignInManager<User> signInManager, IRoleService roleService)
+        public LoginModel(ITokenService tokenService, SignInManager<User> signInManager)
         {
             _tokenService = tokenService;
 
             _signInManager = signInManager;
-            _roleService = roleService;
         }
 
         public void OnGet()
@@ -33,24 +31,15 @@ namespace AltenChancellery.Pages
 
             if (currentUser is not null && await _signInManager.UserManager.CheckPasswordAsync(currentUser, password))
             {
-                IList<string> roles = await _signInManager.UserManager.GetRolesAsync(currentUser);
-
-                IdentityRole role = _roleService.GetHighestRoleOfUser(roles);
-
-                // generate tokens
-                string accessToken = _tokenService.GenerateJwtAccessToken(currentUser, role);
-                RefreshToken refreshToken = _tokenService.GenerateRefreshToken(currentUser);
-                //
-
-                // save refresh token to DB
-                bool saveResult = _tokenService.SaveRefreshToken(refreshToken);
+                // generates jwt and refresh tokens then saves refresh token to DB
+                bool saveResult = _tokenService.GenerateAndSaveTokens(currentUser, out string accessToken, out string refreshToken);
 
                 if (!saveResult)
                     return Redirect("/Error");
                 
                 // save tokens in cookies & in header
-                UpdateTokensInHeader(accessToken, refreshToken.Token);
-                UpdateTokensInCookies(accessToken, refreshToken.Token!);
+                UpdateTokensInHeader(accessToken, refreshToken);
+                UpdateTokensInCookies(accessToken, refreshToken);
 
                 await _signInManager.SignInAsync(currentUser, true);
 

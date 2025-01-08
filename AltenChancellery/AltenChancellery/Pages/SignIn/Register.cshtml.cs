@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceLayer.DTOs;
+using ServiceLayer.DTOs.Common;
 using ServiceLayer.Services.Interfaces;
 using System.Net;
 

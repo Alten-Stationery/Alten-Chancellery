@@ -1,5 +1,6 @@
 ﻿using DBLayer.Models;
 using ServiceLayer.DTOs;
+using ServiceLayer.DTOs.Common;
 
 namespace ServiceLayer.Services.Interfaces
 {
