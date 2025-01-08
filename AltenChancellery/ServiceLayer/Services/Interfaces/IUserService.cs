@@ -1,5 +1,6 @@
 ﻿using DBLayer.Models;
 using ServiceLayer.DTOs;
+using ServiceLayer.DTOs.Common;
 
 namespace ServiceLayer.Services.Interfaces
 {
@@ -16,7 +17,7 @@ namespace ServiceLayer.Services.Interfaces
         #region Exposing UserManager methods ONLY through this interface
 
         Task<IList<string>> GetRolesAsync(User user);
-
+        
 
         #endregion
 

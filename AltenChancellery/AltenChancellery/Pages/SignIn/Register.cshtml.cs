@@ -1,7 +1,9 @@
 using DBLayer.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceLayer.DTOs;
+using ServiceLayer.DTOs.Common;
 using ServiceLayer.Services.Interfaces;
 using System.Net;
 
@@ -23,12 +25,12 @@ namespace AltenChancellery.Pages
         {
         }
 
-        public async Task OnPost(string name, string surname, string email, string password)
+        public async Task<IActionResult> OnPost(string name, string surname, string email, string password)
         {
             bool existCheck = await _signInManager.UserManager.FindByEmailAsync(email) != null;
 
             if (existCheck)
-                Redirect("/Login"); // Email already registered ---> redirect to login page (which is "/")
+                return Redirect("/SignIn/Login"); // Email already registered
 
             UserDTO newUser = new UserDTO()
             {
@@ -42,16 +44,16 @@ namespace AltenChancellery.Pages
 
             if (result.StatusCode != HttpStatusCode.OK
                 && result.StatusCode != HttpStatusCode.Created)
-                Redirect("../Error"); // Temporary error handler
+                return Redirect("/Error"); // Temporary error handler
 
             User? user = await _signInManager.UserManager.FindByEmailAsync(email);
 
-            SignInResult signInResult = await _signInManager.PasswordSignInAsync(user!, password, true, false);
+            Microsoft.AspNetCore.Identity.SignInResult signInResult = await _signInManager.PasswordSignInAsync(user!, password, true, false);
 
             if(!signInResult.Succeeded)
-                Redirect("/Error"); // TODO: redirect with error
+                return Redirect("/Error"); // TODO: redirect with error
             
-            Redirect("../");
+            return Redirect("/");
         }
     }
 }

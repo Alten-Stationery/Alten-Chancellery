@@ -6,6 +6,7 @@ using DBLayer.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using ServiceLayer.Constants.Auth;
 using ServiceLayer.DTOs;
+using ServiceLayer.DTOs.Common;
 using ServiceLayer.Services.Interfaces;
 
 namespace ServiceLayer.Services.Implementations
@@ -23,7 +24,7 @@ namespace ServiceLayer.Services.Implementations
         {
             _mapper = mapper;
             _uow = uow;
-
+            
             _userManager = userManager;
             _roleService = roleService;
         }

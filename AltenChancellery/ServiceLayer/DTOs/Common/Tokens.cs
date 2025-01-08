@@ -1,4 +1,4 @@
-﻿namespace ServiceLayer.DTOs
+﻿namespace ServiceLayer.DTOs.Common
 {
     public class Tokens
     {

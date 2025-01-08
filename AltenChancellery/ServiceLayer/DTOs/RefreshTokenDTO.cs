@@ -1,10 +1,9 @@
-﻿namespace DBLayer.Models
+﻿namespace ServiceLayer.DTOs
 {
-    public class RefreshToken
+    public class RefreshTokenDTO
     {
-        public int Id { get; set; }
         public string UserId { get; set; } = null!;
-        public User User { get; set; } = null!;
+        public UserDTO User { get; set; } = null!;
         public string Token { get; set; } = null!;
         public DateTime ExpirationDate { get; set; }
     }

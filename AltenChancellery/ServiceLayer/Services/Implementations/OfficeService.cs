@@ -4,6 +4,7 @@ using DBLayer.Repositories.Interfaces;
 using DBLayer.UnitOfWork;
 using Microsoft.Identity.Client;
 using ServiceLayer.DTOs;
+using ServiceLayer.DTOs.Common;
 using ServiceLayer.Services.Interfaces;
 using System;
 using System.Collections.Generic;

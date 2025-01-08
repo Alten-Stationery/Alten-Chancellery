@@ -2,6 +2,7 @@ using DBLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceLayer.Constants.Auth;
+using ServiceLayer.DTOs;
 using ServiceLayer.Services.Interfaces;
 
 namespace AltenChancellery.Pages
@@ -30,7 +31,7 @@ namespace AltenChancellery.Pages
             // Check for refresh token
             HttpContext.Request.Cookies.TryGetValue(TokenConst.RefreshToken, out string? refreshToken);
 
-            RefreshToken? storedRefreshToken = _tokenService.GetTokenByStringValue(refreshToken!);
+            RefreshTokenDTO? storedRefreshToken = _tokenService.GetTokenByStringValue(refreshToken!);
 
             if (storedRefreshToken == null || storedRefreshToken.Token != refreshToken)
                 return Redirect("/Error");
