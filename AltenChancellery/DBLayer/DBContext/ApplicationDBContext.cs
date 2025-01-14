@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,13 +20,29 @@ namespace DBLayer.DBContext
         {
 
         }
-
+        public DbSet<Office> Office { get; set; }
+        public DbSet<Item> Item { get; set; }
+        public DbSet<ItemOffice> ItemOffice { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.Entity<User>()
                 .Property(e => e.Id)
                 .HasDefaultValue("NEWID()");
+            //Configurazione della chiave composta per Enrollment
+            builder.Entity<ItemOffice>()
+                .HasKey(e => new { e.OfficeId, e.ItemId });
+
+            // Configurazione delle relazioni
+            builder.Entity<ItemOffice>()
+                .HasOne(e => e.Office)
+                .WithMany(s => s.ItemOffices)
+                .HasForeignKey(e => e.OfficeId);
+
+            builder.Entity<ItemOffice>()
+                .HasOne(e => e.Item)
+                .WithMany(c => c.ItemOffices)
+                .HasForeignKey(e => e.ItemId);
         }
 
     }

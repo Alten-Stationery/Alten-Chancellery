@@ -19,16 +19,29 @@ namespace DBLayer.UnitOfWork
             UserRepo = userRepo;
             RefreshTokenRepo = new RefreshTokenRepository(_context);
             OfficeRepository = new OfficeRepository(_context);
-        }
+            itemOfficeRepository = new ItemOfficeRepository(_context);
+            itemRepository = new ItemRepository(_context);
 
         public int Save()
         {
             return _context.SaveChanges();
         }
 
-        public async Task<int> SaveAsync()
+        public IOfficeRepository OfficeRepository { get; private set; }
+        public IItemOfficeRepository itemOfficeRepository { get; private set; }
+        public IItemRepository itemRepository { get; private set; }
+
+        public async Task<int> Save()
         {
-            return await _context.SaveChangesAsync();
+            try
+            {
+                return await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+
         }
 
         public void Dispose()

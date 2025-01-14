@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DBLayer.Repositories.Interfaces
 {
-    public  interface IGenericRepository<T> where T: class
+    public  interface IGenericRepository<T, TID> where T: class
     {
         T Create(T entity);
         T? Find<K>(K id);

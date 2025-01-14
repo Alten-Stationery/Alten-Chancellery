@@ -24,7 +24,7 @@ namespace ServiceLayer.Services.Implementations
             _mapper = mapper;
             
         }
-        public async Task<Response<OfficeDTO>> AddOfficeAsync(OfficeDTO officeDTO)
+        public async Task<Response<OfficeDTO>> Add(OfficeDTO officeDTO)
         {
             try 
             {
@@ -43,7 +43,7 @@ namespace ServiceLayer.Services.Implementations
             }
         }
 
-        public async Task<Response<List<OfficeDTO>>> GetAllOfficesAsync()
+        public async Task<Response<List<OfficeDTO>>> GetAll()
         {
             try
             {
@@ -58,7 +58,7 @@ namespace ServiceLayer.Services.Implementations
             }
         }
 
-        public async Task<Response<OfficeDTO>> GetOfficeByIdAsync(string id)
+        public async Task<Response<OfficeDTO>> GetById(int id)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace ServiceLayer.Services.Implementations
             }
         }
 
-        public async Task<Response<bool>> RemoveOfficeAsync(string officeId)
+        public async Task<Response<bool>> Remove(int officeId)
         {
             try
             {
@@ -94,22 +94,19 @@ namespace ServiceLayer.Services.Implementations
             }
         }
 
-        public async Task<Response<OfficeDTO>> UpdateOfficeAsync(OfficeDTO officeDTO)
+        public async Task<Response<bool>> Update(OfficeDTO officeDTO)
         {
             try
             {
                 var office = _mapper.Map<Office>(officeDTO);
-                var res = _unitOfWork.OfficeRepository.Update(office);
-                if (!res) return new Response<OfficeDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error during Updating the office" };
+                var res = await _unitOfWork.OfficeRepository.UpdateAsync(office);
+                if (!res) return new Response<bool> { StatusCode = System.Net.HttpStatusCode.InternalServerError,Data = false, Message = "Error during Updating the office" };
                 var officeDTOToSend = _mapper.Map<OfficeDTO>(res);
-
-                await _unitOfWork.SaveAsync();
-
-                return new Response<OfficeDTO> { StatusCode = System.Net.HttpStatusCode.Accepted, Data = officeDTOToSend };
+                return new Response<bool> { StatusCode = System.Net.HttpStatusCode.Accepted, Data = true };
             }
             catch (Exception ex)
             {
-                return new Response<OfficeDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = ex.Message };
+                return new Response<bool> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = ex.Message };
             } 
         }
     }
