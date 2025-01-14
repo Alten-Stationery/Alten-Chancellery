@@ -20,15 +20,15 @@ namespace DBLayer.DBContext
         {
 
         }
-        public DbSet<Office> Office { get; set; }
+        
         public DbSet<Item> Item { get; set; }
         public DbSet<ItemOffice> ItemOffice { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<User>()
-                .Property(e => e.Id)
-                .HasDefaultValue("NEWID()");
+
+           
+
             //Configurazione della chiave composta per Enrollment
             builder.Entity<ItemOffice>()
                 .HasKey(e => new { e.OfficeId, e.ItemId });

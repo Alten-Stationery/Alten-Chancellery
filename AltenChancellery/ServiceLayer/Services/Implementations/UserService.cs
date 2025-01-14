@@ -142,9 +142,11 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
-                if (userDTO == null) throw new ArgumentNullException(nameof(userDTO), "User cannot be null");  
-                var userToUpdate = _mapper.Map<User>(userDTO);
-                var res = await _uow.UserRepo.UpdateUser(userToUpdate);
+                
+                if (userDTO == null) throw new ArgumentNullException(nameof(userDTO), "User cannot be null");
+                var user = await _uow.UserRepo.FindUserByEmail(userDTO.Email);
+                user = _mapper.Map<User>(userDTO);
+                var res = await _uow.UserRepo.UpdateUser(user);
                 if (res is null) return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Error during User Update" };
                 var userToSend = _mapper.Map<UserDTO>(res);
                 return new Response<UserDTO> {StatusCode = System.Net.HttpStatusCode.OK,Data = userToSend};
