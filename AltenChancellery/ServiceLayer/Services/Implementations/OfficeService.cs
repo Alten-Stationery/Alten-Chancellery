@@ -99,10 +99,9 @@ namespace ServiceLayer.Services.Implementations
             try
             {
                 var office = _mapper.Map<Office>(officeDTO);
-                var res = await _unitOfWork.OfficeRepository.UpdateAsync(office);
-                if (!res) return new Response<bool> { StatusCode = System.Net.HttpStatusCode.InternalServerError,Data = false, Message = "Error during Updating the office" };
-                var officeDTOToSend = _mapper.Map<OfficeDTO>(res);
-                return new Response<bool> { StatusCode = System.Net.HttpStatusCode.Accepted, Data = true };
+                var res = _unitOfWork.OfficeRepository.Update(office);
+                if (!res) return new Response<bool> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Data = false, Message = "Error during Updating the office" };
+                return new Response<bool> { StatusCode = System.Net.HttpStatusCode.OK, Data = true };
             }
             catch (Exception ex)
             {

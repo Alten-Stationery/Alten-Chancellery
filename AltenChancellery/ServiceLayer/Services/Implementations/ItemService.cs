@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DBLayer.Models;
 using DBLayer.UnitOfWork;
+using ServiceLayer.DTOs.Common;
 using ServiceLayer.DTOs;
 using ServiceLayer.Services.Interfaces;
 using System;
@@ -25,7 +26,7 @@ namespace ServiceLayer.Services.Implementations
             try
             {
                 var item = _mapper.Map<Item>(dTO);
-                var res = await _unitOfWork.itemRepository.CreateAsync(item);
+                var res = _unitOfWork.itemRepository.Create(item);
                 if (res is null) return new Response<ItemDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error Saving the item" };
                 var itemToSend = _mapper.Map<ItemDTO>(res);
                 return new Response<ItemDTO> { StatusCode = System.Net.HttpStatusCode.OK, Data = itemToSend };
@@ -75,7 +76,7 @@ namespace ServiceLayer.Services.Implementations
             {
                 var itemToDelete = await _unitOfWork.OfficeRepository.FindAsync(id);
                 if (itemToDelete is null) return new Response<bool> { StatusCode = System.Net.HttpStatusCode.NotFound, Data = false, Message = "Error: Item not found" };
-                var res = await _unitOfWork.OfficeRepository.DeleteAsync(itemToDelete);
+                var res =  _unitOfWork.OfficeRepository.Delete(itemToDelete);
                 return new Response<bool> { StatusCode = System.Net.HttpStatusCode.OK, Data = true };
             }
             catch (Exception ex)
@@ -89,7 +90,7 @@ namespace ServiceLayer.Services.Implementations
             try
             {
                 var item = _mapper.Map<Item>(itemDTO);
-                var res = await _unitOfWork.itemRepository.UpdateAsync(item);
+                var res =  _unitOfWork.itemRepository.Update(item);
                 if (!res) return new Response<bool> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Data = false };
                 return new Response<bool> { StatusCode = System.Net.HttpStatusCode.OK, Data = true };
             }

@@ -12,12 +12,13 @@ namespace ServiceLayer.FluentValidators
     {
         public OfficeValitor() 
         {
-            RuleFor(u => u.Id)
-                .NotEmpty()
-                .WithMessage("Error: ID is mandatory");
+            
             RuleFor(u => u.Name)
                 .NotEmpty()
                 .WithMessage("Error: Name is mandatory");
+            RuleFor(u => u.Address)
+                .NotEmpty()
+                .WithMessage("Error: Address is mandatory");
 
         }
     }

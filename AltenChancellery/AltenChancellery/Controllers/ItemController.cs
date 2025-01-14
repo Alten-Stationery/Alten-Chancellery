@@ -23,14 +23,14 @@ namespace AltenChancellery.Controllers
             return Ok(res);
         
         }
-        [HttpPost]
+        [HttpGet]
         [Route("Find")]
         public async Task<IActionResult> Find(int itemId)
         {
             var res = await _itemService.GetById(itemId);
             return Ok(res);
         }
-        [HttpPost]
+        [HttpGet]
         [Route("FindAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -38,7 +38,7 @@ namespace AltenChancellery.Controllers
             return Ok(res);
 
         }
-        [HttpPost]
+        [HttpPut]
         [Route("Update")]
         public async Task<IActionResult> Update(ItemDTO itemDTO)
         {
@@ -46,7 +46,7 @@ namespace AltenChancellery.Controllers
             return Ok(res);
 
         }
-        [HttpPost]
+        [HttpDelete]
         [Route("Remove")]
         public async Task<IActionResult> Remove(int itemId)
         {

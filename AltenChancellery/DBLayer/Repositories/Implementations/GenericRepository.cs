@@ -85,9 +85,14 @@ namespace DBLayer.Repositories.Implementations
         {
             try
             {
-                var result = _dbSet.Update(entity);
+                if (_context.Entry(entity).State == EntityState.Detached)
+                {
+                    _dbSet.Attach(entity);
+                }
 
-                return result.State == EntityState.Modified || result.State == EntityState.Added;
+                _context.Entry(entity).State = EntityState.Modified;
+                _context.SaveChanges();
+                return true;
             }
             catch
             {

@@ -8,7 +8,7 @@ namespace DBLayer.UnitOfWork
     {
         public IUserRepository UserRepo { get; private set; }
         public IRefreshTokenRepository RefreshTokenRepo { get; private set; }
-        public IOfficeRepository OfficeRepository { get; private set; }
+        
 
         private readonly ApplicationDBContext _context;
 
@@ -22,16 +22,13 @@ namespace DBLayer.UnitOfWork
             itemOfficeRepository = new ItemOfficeRepository(_context);
             itemRepository = new ItemRepository(_context);
 
-        public int Save()
-        {
-            return _context.SaveChanges();
         }
 
         public IOfficeRepository OfficeRepository { get; private set; }
         public IItemOfficeRepository itemOfficeRepository { get; private set; }
         public IItemRepository itemRepository { get; private set; }
 
-        public async Task<int> Save()
+        public async Task<int> SaveAsync()
         {
             try
             {

@@ -1,4 +1,5 @@
 ﻿using ServiceLayer.DTOs;
+using ServiceLayer.DTOs.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Services.Interfaces
 {
-    public interface IItemOfficeService
+    public interface IItemOfficeService 
     {
         Task<Response<ItemOfficeDTO>> AddItemOffice(ItemOfficeDTO officeDTO);
         Task<Response<bool>> RemoveItemOffice(int itemId, int officeid );
