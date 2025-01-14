@@ -2,27 +2,29 @@
 using DBLayer.Repositories.Implementations;
 using DBLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace DBLayer.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
+        public IUserRepository UserRepo { get; private set; }
+        public IRefreshTokenRepository RefreshTokenRepo { get; private set; }
+        public IOfficeRepository OfficeRepository { get; private set; }
+
         private readonly ApplicationDBContext _context;
 
-
-
-        public UnitOfWork(ApplicationDBContext context)
+        public UnitOfWork(ApplicationDBContext context, IUserRepository userRepo)
         {
             _context = context;
+
+            UserRepo = userRepo;
+            RefreshTokenRepo = new RefreshTokenRepository(_context);
             OfficeRepository = new OfficeRepository(_context);
             itemOfficeRepository = new ItemOfficeRepository(_context);
             itemRepository = new ItemRepository(_context);
 
+        public int Save()
+        {
+            return _context.SaveChanges();
         }
 
         public IOfficeRepository OfficeRepository { get; private set; }

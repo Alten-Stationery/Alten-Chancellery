@@ -1,23 +1,16 @@
 ﻿using DBLayer.Models;
 using DBLayer.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBLayer.Repositories.Implementations
 {
     public class UserRepository : IUserRepository
     {
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        public UserRepository(UserManager<User> userManager, RoleManager<IdentityRole> roleManager) 
+
+        public UserRepository(UserManager<User> userManager) 
         {
             _userManager = userManager;
-            _roleManager = roleManager;
-
         }
 
         public async Task<bool> AddRole(User user, string role)

@@ -4,6 +4,7 @@ using DBLayer.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241210105229_AddedRefreshTokenTable")]
+    partial class AddedRefreshTokenTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,56 +25,13 @@ namespace DBLayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DBLayer.Models.Item", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Availability")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MinimumAvailability")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Item");
-                });
-
-            modelBuilder.Entity("DBLayer.Models.ItemOffice", b =>
-                {
-                    b.Property<int>("OfficeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OfficeId", "ItemId");
-
-                    b.HasIndex("ItemId");
-
-                    b.ToTable("ItemOffice");
-                });
-
             modelBuilder.Entity("DBLayer.Models.Office", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -148,8 +108,8 @@ namespace DBLayer.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int?>("OfficeId")
-                        .HasColumnType("int");
+                    b.Property<string>("OfficeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -333,25 +293,6 @@ namespace DBLayer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DBLayer.Models.ItemOffice", b =>
-                {
-                    b.HasOne("DBLayer.Models.Item", "Item")
-                        .WithMany("ItemOffices")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DBLayer.Models.Office", "Office")
-                        .WithMany("ItemOffices")
-                        .HasForeignKey("OfficeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-
-                    b.Navigation("Office");
-                });
-
             modelBuilder.Entity("DBLayer.Models.User", b =>
                 {
                     b.HasOne("DBLayer.Models.Office", "Office")
@@ -412,15 +353,8 @@ namespace DBLayer.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DBLayer.Models.Item", b =>
-                {
-                    b.Navigation("ItemOffices");
-                });
-
             modelBuilder.Entity("DBLayer.Models.Office", b =>
                 {
-                    b.Navigation("ItemOffices");
-
                     b.Navigation("Users");
                 });
 #pragma warning restore 612, 618

@@ -4,6 +4,7 @@ using DBLayer.Repositories.Interfaces;
 using DBLayer.UnitOfWork;
 using Microsoft.Identity.Client;
 using ServiceLayer.DTOs;
+using ServiceLayer.DTOs.Common;
 using ServiceLayer.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -28,9 +29,12 @@ namespace ServiceLayer.Services.Implementations
             try 
             {
                 var office = _mapper.Map<Office>(officeDTO);
-                var res = await _unitOfWork.OfficeRepository.CreateAsync(office);
+                var res = _unitOfWork.OfficeRepository.Create(office);
                 if (res == null) return new Response<OfficeDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error saving the Office" };
                 var officeToSend = _mapper.Map<OfficeDTO>(res);
+
+                await _unitOfWork.SaveAsync();
+
                 return new Response<OfficeDTO> {StatusCode = System.Net.HttpStatusCode.OK, Data = officeToSend };
             }
             catch(Exception ex) 
@@ -73,14 +77,20 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
-                var office = _unitOfWork.OfficeRepository.FindAsync(officeId);
+                var office = _unitOfWork.OfficeRepository.Find(officeId);
                 if (office is null) { return new Response<bool> {StatusCode = System.Net.HttpStatusCode.NotFound, Data = false}; }
+
+                bool isDeleted = _unitOfWork.OfficeRepository.Delete(office);
+                if(!isDeleted) { return new Response<bool> { StatusCode = System.Net.HttpStatusCode.NotFound, Data = false }; }
+
+                await _unitOfWork.SaveAsync();
+
                 var officeDTO = _mapper.Map<OfficeDTO>(office);
                 return new Response<bool> { StatusCode = System.Net.HttpStatusCode.OK, Data = true };
             }
             catch (Exception ex)
             {
-                return new Response<bool> { StatusCode=System.Net.HttpStatusCode.InternalServerError,Data = false};
+                return new Response<bool> { StatusCode=System.Net.HttpStatusCode.InternalServerError,Data = false, Message = ex.Message};
             }
         }
 

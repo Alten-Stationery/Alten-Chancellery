@@ -1,6 +1,8 @@
 ﻿using DBLayer.DBContext;
 using DBLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,26 +15,20 @@ namespace DBLayer.Repositories.Implementations
     {
         private readonly ApplicationDBContext _context;
         private protected DbSet<T> _dbSet;
+
         public GenericRepository(ApplicationDBContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
         }
-        public async Task<T> CreateAsync(T entity)
+
+        public T Create(T entity)
         {
             try
             {
                 _context.Attach(entity).State = EntityState.Added;
 
-                if (_context.Entry(entity).State == EntityState.Added)
-                {
-                    await _context.SaveChangesAsync();
-                    return entity;
-                }
-                else
-                {
-                    throw new InvalidOperationException("Impossible to retrive the ID from th entity");
-                }
+                return entity;
             }
             catch
             {
@@ -40,14 +36,15 @@ namespace DBLayer.Repositories.Implementations
             }
         }
 
-        public async Task<bool> DeleteAsync(T entity)
+        public bool Delete(T entity)
         {
             try
             {
-                _context.Entry(entity).State = EntityState.Deleted;
-                var result = await _context.SaveChangesAsync();
-                return result > 0;
+                EntityEntry result = _context.Remove(entity);
 
+                if (result.State == EntityState.Deleted)
+                    return true;
+                else return false;
             }
             catch
             {
@@ -55,16 +52,21 @@ namespace DBLayer.Repositories.Implementations
             }
         }
 
-        public async Task<T?> FindAsync(TID id)
+        public T? Find<K>(K id)
         {
             try
             {
-                return await _dbSet.FindAsync(id);
+                return _dbSet.Find(id);
             }
             catch
             {
                 throw;
             }
+        }
+
+        public async Task<T?> FindAsync<K>(K id)
+        {
+            return await _dbSet.FindAsync(id);
         }
 
         public async Task<List<T>> GetAllAsync()
@@ -79,13 +81,13 @@ namespace DBLayer.Repositories.Implementations
             }
         }
 
-        public async Task<bool> UpdateAsync(T entity)
+        public bool Update(T entity)
         {
             try
             {
                 var result = _dbSet.Update(entity);
 
-                return await _context.SaveChangesAsync() > 0 ? true : false;
+                return result.State == EntityState.Modified || result.State == EntityState.Added;
             }
             catch
             {
