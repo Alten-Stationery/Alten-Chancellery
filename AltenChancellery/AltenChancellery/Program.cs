@@ -20,6 +20,7 @@ using ServiceLayer.FluentValidators;
 using ServiceLayer.Constants.Auth;
 using ServiceLayer.Cache;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,8 +40,11 @@ ConfigurationManager configuration = builder.Configuration;
 //Add DB Connection
 builder.Services.AddDbContext<ApplicationDBContext>(
     options =>
-    options.UseSqlServer(connectionString)
-    );
+    {
+        options.UseSqlServer(connectionString);
+        options.EnableSensitiveDataLogging();
+    }
+    ); 
 
 // Add swagger services
 builder.Services.AddEndpointsApiExplorer();

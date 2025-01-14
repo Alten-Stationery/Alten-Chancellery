@@ -142,7 +142,7 @@ namespace ServiceLayer.Services.Implementations
         {
             bool result = _uow.RefreshTokenRepo.CreateOrUpdate(token);
 
-            if (result) _uow.Save();
+            if (result) _uow.SaveAsync();
 
             return result;
         }

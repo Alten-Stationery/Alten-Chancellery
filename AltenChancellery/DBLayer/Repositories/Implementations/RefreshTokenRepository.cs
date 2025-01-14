@@ -4,7 +4,7 @@ using DBLayer.Repositories.Interfaces;
 
 namespace DBLayer.Repositories.Implementations
 {
-    public class RefreshTokenRepository : GenericRepository<RefreshToken>, IRefreshTokenRepository
+    public class RefreshTokenRepository : GenericRepository<RefreshToken, int>, IRefreshTokenRepository
     {
         public RefreshTokenRepository(ApplicationDBContext context) : base(context)
         {
