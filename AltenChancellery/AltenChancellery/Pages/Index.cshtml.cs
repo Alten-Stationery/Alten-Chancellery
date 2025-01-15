@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceLayer.Constants.Auth;
 using ServiceLayer.DTOs;
 using ServiceLayer.Services.Interfaces;
+using System.Collections;
 
 namespace AltenChancellery.Pages
 {
@@ -11,12 +12,28 @@ namespace AltenChancellery.Pages
     {
         private readonly ITokenService _tokenService;
 
+        public IDictionary<string, int> Items { get; set; } // TODO: change type to items
+
         public IndexModel(ITokenService tokenService)
         {
             _tokenService = tokenService;
+
+            Items = new Dictionary<string, int>();
         }
 
         public async Task<IActionResult> OnGet()
+        {
+            Items = new Dictionary<string, int>()
+            {
+                { "Acqua", 1 },
+                { "Medicine", 1 },
+                { "Attrezzi", 1 },
+            };
+
+            return await TokenCheckProceedings();
+        }
+
+        private async Task<IActionResult> TokenCheckProceedings()
         {
             // get jwt access token
             HttpContext.Request.Cookies.TryGetValue(TokenConst.AccessToken, out string? accessToken);
