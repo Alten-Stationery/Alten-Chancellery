@@ -25,9 +25,13 @@ namespace AltenChancellery.Pages
         {
             Items = new Dictionary<string, int>()
             {
-                { "Acqua", 1 },
+                { "Acqua", -6 },
                 { "Medicine", 1 },
-                { "Attrezzi", 1 },
+                { "Cacciavite", 2 },
+                { "Quaderni", 7 },
+                { "Penne", 10 },
+                { "Subwoofer", 2 },
+                { "Rum", 3 },
             };
 
             return await TokenCheckProceedings();
