@@ -1,4 +1,4 @@
-﻿@page
+﻿@page 
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -14,19 +14,16 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Refill">Refill</a>
                     </li>
                     <div class="nav-item dropdown ms-auto">
                         <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> 
                             <img src="placeholder.jpg" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;"> Nome Utente
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown"> 
-                            <li><a class="dropdown-item" href="#">Profilo</a></li> 
-                            <li><a class="dropdown-item" href="#">Impostazioni</a></li> 
+                            <li><a class="dropdown-item" href="#">Profile</a></li> 
+                            <li><a class="dropdown-item" href="#">Options</a></li> 
                             <li><hr class="dropdown-divider"></li> 
                             <li><a class="dropdown-item" asp-area="" asp-page="/SignIn/Logout">Logout</a></li> 
                         </ul>
@@ -37,7 +34,22 @@
     </nav>
 </header>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="d-flex justify-content-center">
+    <table class="table w-50">
+        <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td scope="row">@item.Key</td>
+                    <td>@item.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

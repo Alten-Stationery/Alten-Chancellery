@@ -1,0 +1,47 @@
+﻿@page
+@model AltenChancellery.Pages.RefillModel
+@{
+    ViewData["Title"] = "Refill Management";
+}
+<style>
+    .selected {
+        background-color: #007bff;
+        color: white;
+    }
+</style>
+
+<div class="d-flex flex-column">
+    <div class="container-fluid flex-grow-1 d-flex flex-column align-items-center justify-content-center">
+        <div class="row flex-grow-1 w-75 mt-3">
+            <div class="col-md-4 d-flex flex-column">
+                <h3>Chancellery</h3>
+                <ul id="chancellery" class="list-group flex-grow-1 overflow-auto">
+                    <li class="list-group-item">Valore 1.1</li>
+                    <li class="list-group-item">Valore 1.2</li>
+                    <li class="list-group-item">Valore 1.3</li>
+                </ul>
+            </div>
+            <div class="col-md-4 d-flex flex-column">
+                <h3>Medicine</h3>
+                <ul id="medicine" class="list-group flex-grow-1 overflow-auto">
+                    <li class="list-group-item">Valore 2.1</li>
+                    <li class="list-group-item">Valore 2.2</li>
+                    <li class="list-group-item">Valore 2.3</li>
+                </ul>
+            </div>
+            <div class="col-md-4 d-flex flex-column">
+                <h3>Anti-fire</h3>
+                <ul id="antifire" class="list-group flex-grow-1 overflow-auto">
+                    <li class="list-group-item">Valore 3.1</li>
+                    <li class="list-group-item">Valore 3.2</li>
+                    <li class="list-group-item">Valore 3.3</li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center p-3 w-100">
+            <button class="btn btn-primary">Crea email</button>
+            <button class="btn btn-secondary" onclick="deleteSelection()">Annulla selezione</button>
+        </div>
+    </div>
+</div>
+<script src="/js/refill.js"></script>
