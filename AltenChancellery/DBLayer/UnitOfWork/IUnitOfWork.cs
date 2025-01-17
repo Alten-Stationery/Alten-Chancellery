@@ -10,6 +10,7 @@ namespace DBLayer.UnitOfWork
         IItemOfficeRepository itemOfficeRepository { get; }
         IItemRepository itemRepository { get; }
         IUserRepository UserRepo { get; }
+        IAlertRepository AlertRepository { get; }
 
         Task<int> SaveAsync();
 

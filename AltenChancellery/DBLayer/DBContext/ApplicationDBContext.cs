@@ -43,6 +43,15 @@ namespace DBLayer.DBContext
                 .HasOne(e => e.Item)
                 .WithMany(c => c.ItemOffices)
                 .HasForeignKey(e => e.ItemId);
+
+           builder.Entity<Alert>()
+                .HasKey(a => a.AlertId); // Configura la chiave primaria
+
+            builder.Entity<Alert>()
+                .HasOne(a => a.ItemOffice) // Relazione con ItemOffice
+                .WithMany(io => io.Alerts) // ItemOffice ha molti Alert
+                .HasForeignKey(a => new { a.ItemId, a.OfficeId }) // Chiave esterna composta
+                .HasPrincipalKey(io => new { io.ItemId, io.OfficeId }); // Chiave composta principale in ItemOffice
         }
 
     }

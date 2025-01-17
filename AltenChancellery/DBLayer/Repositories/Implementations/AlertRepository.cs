@@ -9,12 +9,10 @@ using System.Threading.Tasks;
 
 namespace DBLayer.Repositories.Implementations
 {
-    public class OfficeRepository : GenericRepository<Office, int>,  IOfficeRepository
+    public class AlertRepository : GenericRepository<Alert, int>, IAlertRepository
     {
-        public OfficeRepository(ApplicationDBContext context) : base(context) 
+        public AlertRepository(ApplicationDBContext context) : base(context)
         {
-            
-        }    
-
+        }
     }
 }
