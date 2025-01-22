@@ -30,8 +30,9 @@ namespace ServiceLayer.Services.Implementations
                 if (!CheckDate(dTO.Date)) return new Response<AlertDTO> { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Error: Bad Date for this Alert" };
                 var alert = _mapper.Map<Alert>(dTO);
                 var res = _unitOfWork.AlertRepository.Create(alert);
-                if(res is  null) return new Response<AlertDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error: Error during saving entity"
-                
+                if (res is null) return new Response<AlertDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error: Error during saving entity" };
+                var alertDTO = _mapper.Map<AlertDTO>(res);
+                return new Response<AlertDTO> { StatusCode = System.Net.HttpStatusCode.Accepted, Data = alertDTO };
             }
             catch(Exception ex)
             {
@@ -50,6 +51,11 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
+                var ListAlert = await _unitOfWork.AlertRepository.GetAllAsync();
+                if(ListAlert.Count() == 0) return new Response<List<AlertDTO>>() { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "No Alert Found"};
+                var listAlertDTO = _mapper.Map<List<AlertDTO>>(ListAlert);
+                return new Response<List<AlertDTO>>() { StatusCode = System.Net.HttpStatusCode.OK , Data = listAlertDTO };
+
             }
             catch (Exception ex)
             {
@@ -61,6 +67,10 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
+                var alert = await _unitOfWork.AlertRepository.FindAsync(id);
+                if (alert is null) return new Response<AlertDTO>() { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Not Found" };
+                var alertDTO = _mapper.Map<AlertDTO>(alert);
+                return new Response<AlertDTO>() { StatusCode = System.Net.HttpStatusCode.OK, Data = alertDTO };
             }
             catch (Exception ex)
             {
@@ -72,6 +82,11 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
+                var alert = await _unitOfWork.AlertRepository.FindAsync(id);
+                if (alert is null) return new Response<bool> { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "AlertNotFound" };
+                var res =  _unitOfWork.AlertRepository.Delete(alert);
+                if(!res) return new Response<bool> {StatusCode = System.Net.HttpStatusCode.InternalServerError, Data = res };
+                return new Response<bool>() {StatusCode = System.Net.HttpStatusCode.OK, Data = res };
             }
             catch (Exception ex)
             {
@@ -83,6 +98,10 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
+                var alert = await _unitOfWork.AlertRepository.FindAsync(itemDTO.AlertId);
+
+                var res = _unitOfWork.AlertRepository.Update(alert);
+
             }
             catch (Exception ex)
             {
