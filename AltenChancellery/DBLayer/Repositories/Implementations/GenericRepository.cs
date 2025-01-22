@@ -42,9 +42,9 @@ namespace DBLayer.Repositories.Implementations
             {
                 EntityEntry result = _context.Remove(entity);
 
-                if (result.State == EntityState.Deleted)
-                    return true;
-                else return false;
+                if (result.State == EntityState.Deleted) return true;
+                
+                return false;
             }
             catch
             {
@@ -91,7 +91,7 @@ namespace DBLayer.Repositories.Implementations
                 }
 
                 _context.Entry(entity).State = EntityState.Modified;
-                _context.SaveChanges();
+                
                 return true;
             }
             catch
