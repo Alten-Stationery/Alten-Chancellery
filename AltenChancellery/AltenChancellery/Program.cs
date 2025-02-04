@@ -21,6 +21,7 @@ using ServiceLayer.Constants.Auth;
 using ServiceLayer.Cache;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using AltenChancellery.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,10 +73,18 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IOfficeService, OfficeService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IItemService, ItemService>();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOfficeRepository, OfficeRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
+builder.Services.AddScoped<IItemOfficeRepository, ItemOfficeRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
@@ -183,6 +192,8 @@ else
     app.UseHsts();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -213,5 +224,5 @@ async Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserMana
         }
     }
 
-
+    
 }
