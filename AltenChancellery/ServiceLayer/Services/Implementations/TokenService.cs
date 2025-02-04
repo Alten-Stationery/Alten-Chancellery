@@ -53,7 +53,7 @@ namespace ServiceLayer.Services.Implementations
 
         public async Task<Tokens> RefreshToken(RefreshTokenDTO currentRefreshToken)
         {
-            User? currentUser = await _uow.UserRepo.FindUserById(currentRefreshToken.UserId);
+            User? currentUser = await _uow.UserRepository.FindUserById(currentRefreshToken.UserId);
 
             IList<string> roleList = await _userService.GetRolesAsync(currentUser);
 
@@ -65,7 +65,7 @@ namespace ServiceLayer.Services.Implementations
 
         public RefreshTokenDTO? GetTokenByStringValue(string refreshToken)
         {
-            return _mapper.Map<RefreshTokenDTO>(_uow.RefreshTokenRepo.GetByTokenString(refreshToken));
+            return _mapper.Map<RefreshTokenDTO>(_uow.RefreshTokenRepository.GetByTokenString(refreshToken));
         }
 
         public bool DeleteToken(string refreshToken)
@@ -74,7 +74,7 @@ namespace ServiceLayer.Services.Implementations
 
             RefreshToken token = _mapper.Map<RefreshToken>(tokenDTO);
 
-            bool result = _uow.RefreshTokenRepo.Delete(token);
+            bool result = _uow.RefreshTokenRepository.Delete(token);
 
             if (result) _uow.SaveAsync();
 
@@ -83,7 +83,7 @@ namespace ServiceLayer.Services.Implementations
 
         public bool IsRefreshTokenValid(string refreshToken)
         {
-            RefreshToken? token = _uow.RefreshTokenRepo.GetByTokenString(refreshToken);
+            RefreshToken? token = _uow.RefreshTokenRepository.GetByTokenString(refreshToken);
 
             if (token == null) return false;
 
@@ -101,9 +101,9 @@ namespace ServiceLayer.Services.Implementations
 
         public async Task<UserDTO> GetUserByRefreshToken(string refreshToken)
         {
-            string userId = _uow.RefreshTokenRepo.GetUserIdByTokenString(refreshToken);
+            string userId = _uow.RefreshTokenRepository.GetUserIdByTokenString(refreshToken);
 
-            return _mapper.Map<UserDTO>(await _uow.UserRepo.FindUserById(userId));
+            return _mapper.Map<UserDTO>(await _uow.UserRepository.FindUserById(userId));
         }
 
         private string GenerateJwtAccessToken(User user, IdentityRole role)
@@ -140,7 +140,7 @@ namespace ServiceLayer.Services.Implementations
 
         private bool SaveRefreshToken(RefreshToken token)
         {
-            bool result = _uow.RefreshTokenRepo.CreateOrUpdate(token);
+            bool result = _uow.RefreshTokenRepository.CreateOrUpdate(token);
 
             if (result) _uow.SaveAsync();
 

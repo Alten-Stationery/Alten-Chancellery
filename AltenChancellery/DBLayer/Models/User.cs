@@ -13,7 +13,6 @@ namespace DBLayer.Models
         public string Surname { get; set; }
         public int? OfficeId { get; set; }
         public virtual Office Office { get; set; }
-      
-       
+        public virtual IList<Notification> Notifications { get; set; }
     }
 }

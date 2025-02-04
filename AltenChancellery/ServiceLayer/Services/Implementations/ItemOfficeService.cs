@@ -25,7 +25,7 @@ namespace ServiceLayer.Services.Implementations
         public async Task<Response<ItemOfficeDTO>> AddItemOffice(ItemOfficeDTO itemOfficeDTO)
         {
             var itemOffice = _mapper.Map<ItemOffice>(itemOfficeDTO);
-            var res =  _unitOfWork.itemOfficeRepository.Create(itemOffice);
+            var res =  _unitOfWork.ItemOfficeRepository.Create(itemOffice);
             if (res is null) return new Response<ItemOfficeDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error: Error saving itemoffice" };
             var itemOfficeToSend = _mapper.Map<ItemOfficeDTO>(res);
             return new Response<ItemOfficeDTO> { StatusCode = System.Net.HttpStatusCode.OK, Data = itemOfficeToSend };
@@ -33,7 +33,7 @@ namespace ServiceLayer.Services.Implementations
 
         public async Task<Response<List<ItemOfficeDTO>>> GetAllItemOffices()
         {
-            var officeList = await _unitOfWork.itemOfficeRepository.GetAllAsync();
+            var officeList = await _unitOfWork.ItemOfficeRepository.GetAllAsync();
             if (officeList.Count == 0) return new Response<List<ItemOfficeDTO>> { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Error: ItemOffice Not Found" };
             var officeListDTO = _mapper.Map<List<ItemOfficeDTO>>(officeList);
             return new Response<List<ItemOfficeDTO>> { StatusCode = System.Net.HttpStatusCode.OK, Data = officeListDTO };
@@ -44,7 +44,7 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
-                var itemList = await _unitOfWork.itemOfficeRepository.GetItemFromOffice(officeId);
+                var itemList = await _unitOfWork.ItemOfficeRepository.GetItemFromOffice(officeId);
                 if (itemList.Count() == 0) return new Response<List<ItemDTO>> { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "ERROR, no Item Found" };
                 var itemDTOList = _mapper.Map<List<ItemDTO>>(itemList);
                 return new Response<List<ItemDTO>> { StatusCode = System.Net.HttpStatusCode.OK, Data = itemDTOList, Message = "Mapper" };
@@ -60,7 +60,7 @@ namespace ServiceLayer.Services.Implementations
         {
             try 
             {
-                var itemOffice = await _unitOfWork.itemOfficeRepository.GetItemOfficeById(officeId, itemId);
+                var itemOffice = await _unitOfWork.ItemOfficeRepository.GetItemOfficeById(officeId, itemId);
                 if (itemOffice == null) return new Response<ItemOfficeDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error: No ItemOffice Found" };
                 var itemOfficeDTO = _mapper.Map<ItemOfficeDTO>(itemOffice);
                 return new Response<ItemOfficeDTO> { StatusCode = System.Net.HttpStatusCode.OK, Data = itemOfficeDTO };
@@ -75,8 +75,8 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
-                var ItemOfficeToRemove = await _unitOfWork.itemOfficeRepository.GetItemOfficeById(officeId, itemId);
-                var res =  _unitOfWork.itemOfficeRepository.Delete(ItemOfficeToRemove);
+                var ItemOfficeToRemove = await _unitOfWork.ItemOfficeRepository.GetItemOfficeById(officeId, itemId);
+                var res =  _unitOfWork.ItemOfficeRepository.Delete(ItemOfficeToRemove);
                 if (!res) return new Response<bool> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error deleting the itemOffice" };
                 return new Response<bool> { StatusCode = System.Net.HttpStatusCode.OK, Data = res };
             }
@@ -91,7 +91,7 @@ namespace ServiceLayer.Services.Implementations
             try
             {
                 var itemOffice = _mapper.Map<ItemOffice>(itemOfficeDTO);
-                var res =  _unitOfWork.itemOfficeRepository.Update(itemOffice);
+                var res =  _unitOfWork.ItemOfficeRepository.Update(itemOffice);
                 if (!res) return new Response<bool> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Data = res,  Message = "Error updating ItemOffice" };
                 return new Response<bool> { StatusCode = System.Net.HttpStatusCode.OK, Data = res };
 

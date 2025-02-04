@@ -26,7 +26,7 @@ namespace ServiceLayer.Services.Implementations
             try
             {
                 var item = _mapper.Map<Item>(dTO);
-                var res = _unitOfWork.itemRepository.Create(item);
+                var res = _unitOfWork.ItemRepository.Create(item);
                 if (res is null) return new Response<ItemDTO> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Message = "Error Saving the item" };
                 var itemToSend = _mapper.Map<ItemDTO>(res);
                 return new Response<ItemDTO> { StatusCode = System.Net.HttpStatusCode.OK, Data = itemToSend };
@@ -41,7 +41,7 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
-                var itemList = await _unitOfWork.itemRepository.GetAllAsync();
+                var itemList = await _unitOfWork.ItemRepository.GetAllAsync();
                 if (itemList is null) return new Response<List<ItemDTO>> { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Error: No ItemFound" };
                 var itemListDTO = _mapper.Map<List<ItemDTO>>(itemList);
                 return new Response<List<ItemDTO>> { StatusCode = System.Net.HttpStatusCode.OK, Data = itemListDTO };
@@ -57,7 +57,7 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
-                var item = await _unitOfWork.itemRepository.FindAsync(id);
+                var item = await _unitOfWork.ItemRepository.FindAsync(id);
                 if (item is null) return new Response<ItemDTO> { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "Item not Found" };
                 var itemDTO = _mapper.Map<ItemDTO>(item);
                 return new Response<ItemDTO> { StatusCode = System.Net.HttpStatusCode.OK, Data = itemDTO };
@@ -90,7 +90,7 @@ namespace ServiceLayer.Services.Implementations
             try
             {
                 var item = _mapper.Map<Item>(itemDTO);
-                var res =  _unitOfWork.itemRepository.Update(item);
+                var res =  _unitOfWork.ItemRepository.Update(item);
                 if (!res) return new Response<bool> { StatusCode = System.Net.HttpStatusCode.InternalServerError, Data = false };
                 return new Response<bool> { StatusCode = System.Net.HttpStatusCode.OK, Data = true };
             }

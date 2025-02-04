@@ -4,12 +4,13 @@ namespace DBLayer.UnitOfWork
 {
     public interface IUnitOfWork :IDisposable
     {
-
-        IRefreshTokenRepository RefreshTokenRepo { get; }
+        ICategoryRepository CategoryRepository { get; }
+        INotificationRepository NotificationRepository { get; }
+        IRefreshTokenRepository RefreshTokenRepository { get; }
         IOfficeRepository OfficeRepository { get; }
-        IItemOfficeRepository itemOfficeRepository { get; }
-        IItemRepository itemRepository { get; }
-        IUserRepository UserRepo { get; }
+        IItemOfficeRepository ItemOfficeRepository { get; }
+        IItemRepository ItemRepository { get; }
+        IUserRepository UserRepository { get; }
 
         Task<int> SaveAsync();
 

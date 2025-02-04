@@ -6,9 +6,13 @@ namespace DBLayer.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public IUserRepository UserRepo { get; private set; }
-        public IRefreshTokenRepository RefreshTokenRepo { get; private set; }
-        
+        public INotificationRepository NotificationRepository { get; set; }
+        public IUserRepository UserRepository { get; private set; }
+        public IRefreshTokenRepository RefreshTokenRepository { get; private set; }
+        public IOfficeRepository OfficeRepository { get; private set; }
+        public IItemOfficeRepository ItemOfficeRepository { get; private set; }
+        public IItemRepository ItemRepository { get; private set; }
+        public ICategoryRepository CategoryRepository { get; private set; }
 
         private readonly ApplicationDBContext _context;
 
@@ -16,17 +20,14 @@ namespace DBLayer.UnitOfWork
         {
             _context = context;
 
-            UserRepo = userRepo;
-            RefreshTokenRepo = new RefreshTokenRepository(_context);
+            UserRepository = userRepo;
+            RefreshTokenRepository = new RefreshTokenRepository(_context);
             OfficeRepository = new OfficeRepository(_context);
-            itemOfficeRepository = new ItemOfficeRepository(_context);
-            itemRepository = new ItemRepository(_context);
-
+            ItemOfficeRepository = new ItemOfficeRepository(_context);
+            ItemRepository = new ItemRepository(_context);
+            NotificationRepository = new NotificationRepository(_context);
+            CategoryRepository = new CategoryRepository(_context);
         }
-
-        public IOfficeRepository OfficeRepository { get; private set; }
-        public IItemOfficeRepository itemOfficeRepository { get; private set; }
-        public IItemRepository itemRepository { get; private set; }
 
         public async Task<int> SaveAsync()
         {

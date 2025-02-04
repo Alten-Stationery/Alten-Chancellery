@@ -4,6 +4,7 @@ using DBLayer.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250117143811_AddedConversionConventionForCategoryName")]
+    partial class AddedConversionConventionForCategoryName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace DBLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("DBLayer.Models.Item", b =>
@@ -65,7 +68,7 @@ namespace DBLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Item", (string)null);
+                    b.ToTable("Item");
                 });
 
             modelBuilder.Entity("DBLayer.Models.ItemOffice", b =>
@@ -80,7 +83,7 @@ namespace DBLayer.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("ItemOffice", (string)null);
+                    b.ToTable("ItemOffice");
                 });
 
             modelBuilder.Entity("DBLayer.Models.Notification", b =>
@@ -102,7 +105,7 @@ namespace DBLayer.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("DBLayer.Models.Office", b =>
@@ -122,7 +125,7 @@ namespace DBLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Office", (string)null);
+                    b.ToTable("Office");
                 });
 
             modelBuilder.Entity("DBLayer.Models.RefreshToken", b =>
@@ -148,15 +151,13 @@ namespace DBLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("DBLayer.Models.User", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)")
-                        .HasDefaultValue("NEWID()");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -376,7 +377,7 @@ namespace DBLayer.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("NotificationUser", (string)null);
+                    b.ToTable("NotificationUser");
                 });
 
             modelBuilder.Entity("DBLayer.Models.ItemOffice", b =>

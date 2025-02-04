@@ -13,5 +13,6 @@ namespace ServiceLayer.DTOs
         public string? Description { get; set; }
         public int Availability { get; set; }
         public int MinimumAvailability { get; set; }
+        public int CategoryId { get; set; }
     }
 }

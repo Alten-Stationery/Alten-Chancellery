@@ -79,8 +79,8 @@ namespace ServiceLayer.Services.Implementations
             { 
                 var user = _mapper.Map<User>(userDTO);
                 if (userDTO == null) throw new ArgumentNullException(nameof(userDTO), "User cannot be null");
-                if (await _uow.UserRepo.UserExist(userDTO.Email)) throw new Exception("User Already exist");
-                var response = await _uow.UserRepo.AddUser(user);
+                if (await _uow.UserRepository.UserExist(userDTO.Email)) throw new Exception("User Already exist");
+                var response = await _uow.UserRepository.AddUser(user);
                 
                 if (response == null) return new Response<UserDTO> { Message = "User not Saved", StatusCode = System.Net.HttpStatusCode.InternalServerError };
 
@@ -89,7 +89,7 @@ namespace ServiceLayer.Services.Implementations
                 foreach (var role in userRoles)
                 {
                     if (await _roleService.RoleExistsAsync(role))
-                        await _uow.UserRepo.AddRole(response, role);
+                        await _uow.UserRepository.AddRole(response, role);
                 }
                 var userDtoToSend = _mapper.Map<UserDTO>(response);
 
@@ -105,8 +105,8 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
-                var userToDelete = await _uow.UserRepo.FindUserById(id);
-                var res = await _uow.UserRepo.DeleteUser(userToDelete);
+                var userToDelete = await _uow.UserRepository.FindUserById(id);
+                var res = await _uow.UserRepository.DeleteUser(userToDelete);
 
                 if (res)
                 {
@@ -126,7 +126,7 @@ namespace ServiceLayer.Services.Implementations
         {
             try
             {
-                var user = await _uow.UserRepo.FindUserById(id);
+                var user = await _uow.UserRepository.FindUserById(id);
                 if (user is null) return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.NotFound, Message = "User not Found" };
                 var userToSend = _mapper.Map<UserDTO>(user);
                 return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.OK, Data = userToSend };
@@ -144,9 +144,9 @@ namespace ServiceLayer.Services.Implementations
             {
                 
                 if (userDTO == null) throw new ArgumentNullException(nameof(userDTO), "User cannot be null");
-                var user = await _uow.UserRepo.FindUserByEmail(userDTO.Email);
+                var user = await _uow.UserRepository.FindUserByEmail(userDTO.Email);
                 user = _mapper.Map<User>(userDTO);
-                var res = await _uow.UserRepo.UpdateUser(user);
+                var res = await _uow.UserRepository.UpdateUser(user);
                 if (res is null) return new Response<UserDTO> { StatusCode = System.Net.HttpStatusCode.BadRequest, Message = "Error during User Update" };
                 var userToSend = _mapper.Map<UserDTO>(res);
                 return new Response<UserDTO> {StatusCode = System.Net.HttpStatusCode.OK,Data = userToSend};
