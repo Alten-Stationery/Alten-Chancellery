@@ -46,13 +46,6 @@ namespace AltenChancellery.Pages
                 && result.StatusCode != HttpStatusCode.Created)
                 return Redirect("/Error"); // Temporary error handler
 
-            User? user = await _signInManager.UserManager.FindByEmailAsync(email);
-
-            Microsoft.AspNetCore.Identity.SignInResult signInResult = await _signInManager.PasswordSignInAsync(user!, password, true, false);
-
-            if(!signInResult.Succeeded)
-                return Redirect("/Error"); // TODO: redirect with error
-            
             return Redirect("/");
         }
     }

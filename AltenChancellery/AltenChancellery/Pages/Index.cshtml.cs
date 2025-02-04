@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ServiceLayer.Constants.Auth;
 using ServiceLayer.DTOs;
+using ServiceLayer.Services.Implementations;
 using ServiceLayer.Services.Interfaces;
 using System.Collections;
 
@@ -11,28 +12,29 @@ namespace AltenChancellery.Pages
     public class IndexModel : PageModel
     {
         private readonly ITokenService _tokenService;
+        private readonly IItemService _itemService;
+        private readonly ICategoryService _categoryService;
 
-        public IDictionary<string, int> Items { get; set; } // TODO: change type to items
+        public IList<ItemDTO> Items { get; set; }
+        public IList<CategoryDTO> Categories { get; set; }
 
-        public IndexModel(ITokenService tokenService)
+        public IndexModel(ITokenService tokenService, IItemService itemService, ICategoryService categoryService)
         {
             _tokenService = tokenService;
+            _itemService = itemService;
+            _categoryService = categoryService;
 
-            Items = new Dictionary<string, int>();
+            Items = new List<ItemDTO>();
+            Categories = new List<CategoryDTO>();
         }
 
         public async Task<IActionResult> OnGet()
         {
-            Items = new Dictionary<string, int>()
-            {
-                { "Acqua", -6 },
-                { "Medicine", 1 },
-                { "Cacciavite", 2 },
-                { "Quaderni", 7 },
-                { "Penne", 10 },
-                { "Subwoofer", 2 },
-                { "Rum", 3 },
-            };
+            var categories = await _categoryService.GetAll();
+            var items = await _itemService.GetAll();
+
+            Categories = categories.Data;
+            Items = items.Data;
 
             return await TokenCheckProceedings();
         }
@@ -55,7 +57,11 @@ namespace AltenChancellery.Pages
             RefreshTokenDTO? storedRefreshToken = _tokenService.GetTokenByStringValue(refreshToken!);
 
             if (storedRefreshToken == null || storedRefreshToken.Token != refreshToken)
+            {
+                HttpContext.Response.Cookies.Delete(TokenConst.AccessToken);
+                HttpContext.Response.Cookies.Delete(TokenConst.RefreshToken);
                 return Redirect("/Error");
+            }
 
             bool isRefreshTokenValid = _tokenService.IsRefreshTokenValid(refreshToken!);
 

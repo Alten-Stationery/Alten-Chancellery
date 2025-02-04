@@ -25,6 +25,8 @@ namespace AltenChancellery.Pages
             
         }
 
+        // TODO: testare la casistica in cui si esegue la registrazione e poi si esegue il login subito dopo, possibile errore nella
+        //       dispose del context (non stoppare l'applicazione per testare questa casistica)
         public async Task<IActionResult> OnPostAsync(string email, string password)
         {
             User? currentUser = await _signInManager.UserManager.FindByEmailAsync(email);
