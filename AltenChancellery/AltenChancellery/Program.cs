@@ -169,6 +169,7 @@ var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityR
 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
 //Create role and seed
+Startup();
 await SeedRolesAndAdminUser(roleManager, userManager);
 
 // Configure the HTTP request pipeline.
@@ -190,20 +191,27 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-//Automatically apply Migration on the startup
-using (var scope1 = app.Services.CreateScope())
+
+void Startup() 
 {
-    try
+    using (var scope1 = app.Services.CreateScope())
     {
-        var dbContext = scope1.ServiceProvider.GetRequiredService<ApplicationDBContext>();
-        dbContext.Database.Migrate();
+        try
+        {
+            var dbContext = scope1.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+            dbContext.Database.EnsureCreated();
+            dbContext.Database.Migrate();
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine($"An error occurred while migrating the database: {ex.Message}");
+        }
     }
-    catch (Exception ex)
-    {
-        
-        Console.WriteLine($"An error occurred while migrating the database: {ex.Message}");
-    }
+ 
 }
+//Automatically apply Migration on the startup
+
 
 app.UseRouting();
 app.MapControllers();
@@ -216,14 +224,14 @@ app.Run();
 
 async Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
 {
-    // Defination of the roules
+    // Definizione dei ruoli
     var roleNames = typeof(UserRoles)
                     .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
                     .Where(fi => fi.IsLiteral && !fi.IsInitOnly)
                     .Select(fi => fi.GetValue(null).ToString())
                     .ToList();
 
-    // Creation of the roules
+    // Creazione dei ruoli
     foreach (var roleName in roleNames)
     {
         if (!await roleManager.RoleExistsAsync(roleName))
@@ -232,5 +240,40 @@ async Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserMana
         }
     }
 
+    // Creazione dell'utente Admin
+    try
+    {
+        if (await userManager.FindByEmailAsync("admin@alten.it") is null)
+        {
+            User admin = new User
+            {
+                Email = "admin@alten.it".ToLower(),
+                Name = "admin",
+                OfficeId = 1,
+                Surname = "admin",
+                UserName = "admin@alten.it".ToLower()
+            };
 
+            var result = await userManager.CreateAsync(admin, "Admin@1234");
+
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(admin, UserRoles.Admin);
+                Console.WriteLine("Admin user created successfully!");
+            }
+            else
+            {
+                Console.WriteLine($"Error creating admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Admin user already exists.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Exception occurred: {ex.Message}");
+    }
 }
+
