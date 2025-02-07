@@ -4,6 +4,7 @@ using DBLayer.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250115083207_ItemOfficeUpdate")]
+    partial class ItemOfficeUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,30 +24,6 @@ namespace DBLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("DBLayer.Models.Alert", b =>
-                {
-                    b.Property<int>("AlertId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AlertId"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OfficeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AlertId");
-
-                    b.HasIndex("ItemId", "OfficeId");
-
-                    b.ToTable("Alert", (string)null);
-                });
 
             modelBuilder.Entity("DBLayer.Models.Item", b =>
                 {
@@ -66,7 +45,7 @@ namespace DBLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Item", (string)null);
+                    b.ToTable("Item");
                 });
 
             modelBuilder.Entity("DBLayer.Models.ItemOffice", b =>
@@ -82,7 +61,9 @@ namespace DBLayer.Migrations
 
                     b.HasKey("OfficeId", "ItemId");
 
-                    b.ToTable("ItemOffice", (string)null);
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("ItemOffice");
                 });
 
             modelBuilder.Entity("DBLayer.Models.Office", b =>
@@ -100,16 +81,9 @@ namespace DBLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RlsId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RlsId")
-                        .IsUnique()
-                        .HasFilter("[RlsId] IS NOT NULL");
-
-                    b.ToTable("Office", (string)null);
+                    b.ToTable("Office");
                 });
 
             modelBuilder.Entity("DBLayer.Models.RefreshToken", b =>
@@ -135,7 +109,7 @@ namespace DBLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("DBLayer.Models.User", b =>
@@ -155,9 +129,6 @@ namespace DBLayer.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRls")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -352,18 +323,6 @@ namespace DBLayer.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DBLayer.Models.Alert", b =>
-                {
-                    b.HasOne("DBLayer.Models.ItemOffice", "ItemOffice")
-                        .WithMany("Alerts")
-                        .HasForeignKey("ItemId", "OfficeId")
-                        .HasPrincipalKey("ItemId", "OfficeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ItemOffice");
-                });
-
             modelBuilder.Entity("DBLayer.Models.ItemOffice", b =>
                 {
                     b.HasOne("DBLayer.Models.Item", "Item")
@@ -381,15 +340,6 @@ namespace DBLayer.Migrations
                     b.Navigation("Item");
 
                     b.Navigation("Office");
-                });
-
-            modelBuilder.Entity("DBLayer.Models.Office", b =>
-                {
-                    b.HasOne("DBLayer.Models.User", "Rls")
-                        .WithOne()
-                        .HasForeignKey("DBLayer.Models.Office", "RlsId");
-
-                    b.Navigation("Rls");
                 });
 
             modelBuilder.Entity("DBLayer.Models.RefreshToken", b =>
@@ -466,11 +416,6 @@ namespace DBLayer.Migrations
             modelBuilder.Entity("DBLayer.Models.Item", b =>
                 {
                     b.Navigation("ItemOffices");
-                });
-
-            modelBuilder.Entity("DBLayer.Models.ItemOffice", b =>
-                {
-                    b.Navigation("Alerts");
                 });
 
             modelBuilder.Entity("DBLayer.Models.Office", b =>

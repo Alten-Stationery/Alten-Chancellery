@@ -16,7 +16,23 @@ namespace DBLayer.Repositories.Implementations
         {
         
         }
+        public async Task<string> GetRLSEmail(int officeId)
+        {
+            try
+            {
+                var rls = await _dbSet
+                .Where(x => x.Office.Id == officeId)
+                .Select(x => x.Office.Rls.Email)
+                .FirstOrDefaultAsync();
+                return rls;
+            }
+            catch
+            {
+                throw;
+            }
+            
 
+        }
         public async Task<ItemOffice> GetItemOfficeById(int officeId, int itemId)
         {
             try 

@@ -15,19 +15,24 @@ namespace DBLayer.DBContext
     {
         public DbSet<Office> Office { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Item> Item { get; set; }
+        public DbSet<ItemOffice> ItemOffice { get; set; }
+        public DbSet<Alert> Alert { get; set; }
 
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
 
         }
         
-        public DbSet<Item> Item { get; set; }
-        public DbSet<ItemOffice> ItemOffice { get; set; }
+       
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-           
+            builder.Entity<Office>()
+            .HasOne(o => o.Rls)
+            .WithOne()
+            .HasForeignKey<Office>(o => o.RlsId);
 
             //Configurazione della chiave composta per Enrollment
             builder.Entity<ItemOffice>()
@@ -43,6 +48,15 @@ namespace DBLayer.DBContext
                 .HasOne(e => e.Item)
                 .WithMany(c => c.ItemOffices)
                 .HasForeignKey(e => e.ItemId);
+
+           builder.Entity<Alert>()
+                .HasKey(a => a.AlertId); // Configura la chiave primaria
+
+            builder.Entity<Alert>()
+                .HasOne(a => a.ItemOffice) // Relazione con ItemOffice
+                .WithMany(io => io.Alerts) // ItemOffice ha molti Alert
+                .HasForeignKey(a => new { a.ItemId, a.OfficeId }) // Chiave esterna composta
+                .HasPrincipalKey(io => new { io.ItemId, io.OfficeId }); // Chiave composta principale in ItemOffice
         }
 
     }

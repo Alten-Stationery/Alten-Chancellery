@@ -66,12 +66,16 @@ builder.Services.AddSingleton(mapper);
 // cache
 builder.Services.AddSingleton<IMemoryCache, MemoryCache>();
 builder.Services.AddScoped<ICacheManager, CacheManager>();
-//
+
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IOfficeService, OfficeService>();
+builder.Services.AddScoped<IItemOfficeService, ItemOfficeService>();
+builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<IAlertService,  AlertService>();
+
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -185,6 +189,21 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+//Automatically apply Migration on the startup
+using (var scope1 = app.Services.CreateScope())
+{
+    try
+    {
+        var dbContext = scope1.ServiceProvider.GetRequiredService<ApplicationDBContext>();
+        dbContext.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        
+        Console.WriteLine($"An error occurred while migrating the database: {ex.Message}");
+    }
+}
 
 app.UseRouting();
 app.MapControllers();

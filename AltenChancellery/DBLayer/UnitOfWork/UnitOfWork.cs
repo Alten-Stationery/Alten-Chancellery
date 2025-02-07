@@ -21,13 +21,16 @@ namespace DBLayer.UnitOfWork
             OfficeRepository = new OfficeRepository(_context);
             itemOfficeRepository = new ItemOfficeRepository(_context);
             itemRepository = new ItemRepository(_context);
+            AlertRepository = new AlertRepository(_context);
 
         }
 
         public IOfficeRepository OfficeRepository { get; private set; }
         public IItemOfficeRepository itemOfficeRepository { get; private set; }
         public IItemRepository itemRepository { get; private set; }
+        public IAlertRepository AlertRepository { get; private set; }
 
+   
         public async Task<int> SaveAsync()
         {
             try

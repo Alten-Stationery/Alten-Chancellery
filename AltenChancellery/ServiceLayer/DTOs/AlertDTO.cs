@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.DTOs
 {
-    public class ItemOfficeDTO
+    public class AlertDTO
     {
+        public int AlertId { get; set; }
         public int ItemId { get; set; }
         public int OfficeId { get; set; }
-        public int Availability { get; set; }
+        public DateTime Date { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace AltenChancellery.Configuration
             CreateMap<Office, OfficeDTO>().ReverseMap();
             CreateMap<Item, ItemDTO>().ReverseMap();
             CreateMap<ItemOffice, ItemOfficeDTO>().ReverseMap();
-
+            CreateMap<Alert, AlertDTO>().ReverseMap();
             CreateMap<RefreshToken, RefreshTokenDTO>().ReverseMap();
         }
     }
