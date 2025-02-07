@@ -12,6 +12,7 @@ namespace DBLayer.Models
         public string Name { get; set; }
         public string Surname { get; set; }
         public int? OfficeId { get; set; }
+        public bool IsRls { get; set; }
         public virtual Office Office { get; set; }
         
     }

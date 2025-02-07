@@ -15,19 +15,24 @@ namespace DBLayer.DBContext
     {
         public DbSet<Office> Office { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Item> Item { get; set; }
+        public DbSet<ItemOffice> ItemOffice { get; set; }
+        public DbSet<Alert> Alert { get; set; }
 
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
 
         }
         
-        public DbSet<Item> Item { get; set; }
-        public DbSet<ItemOffice> ItemOffice { get; set; }
+       
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-           
+            builder.Entity<Office>()
+            .HasOne(o => o.Rls)
+            .WithOne()
+            .HasForeignKey<Office>(o => o.RlsId);
 
             //Configurazione della chiave composta per Enrollment
             builder.Entity<ItemOffice>()

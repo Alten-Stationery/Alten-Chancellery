@@ -4,6 +4,7 @@ using DBLayer.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250123131326_RLSAdaption")]
+    partial class RLSAdaption
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,7 @@ namespace DBLayer.Migrations
 
                     b.HasIndex("ItemId", "OfficeId");
 
-                    b.ToTable("Alert", (string)null);
+                    b.ToTable("Alert");
                 });
 
             modelBuilder.Entity("DBLayer.Models.Item", b =>
@@ -66,7 +69,7 @@ namespace DBLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Item", (string)null);
+                    b.ToTable("Item");
                 });
 
             modelBuilder.Entity("DBLayer.Models.ItemOffice", b =>
@@ -82,7 +85,7 @@ namespace DBLayer.Migrations
 
                     b.HasKey("OfficeId", "ItemId");
 
-                    b.ToTable("ItemOffice", (string)null);
+                    b.ToTable("ItemOffice");
                 });
 
             modelBuilder.Entity("DBLayer.Models.Office", b =>
@@ -109,7 +112,7 @@ namespace DBLayer.Migrations
                         .IsUnique()
                         .HasFilter("[RlsId] IS NOT NULL");
 
-                    b.ToTable("Office", (string)null);
+                    b.ToTable("Office");
                 });
 
             modelBuilder.Entity("DBLayer.Models.RefreshToken", b =>
@@ -135,7 +138,7 @@ namespace DBLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("DBLayer.Models.User", b =>

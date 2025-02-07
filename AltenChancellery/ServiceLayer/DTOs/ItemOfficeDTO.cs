@@ -10,5 +10,6 @@ namespace ServiceLayer.DTOs
     {
         public int ItemId { get; set; }
         public int OfficeId { get; set; }
+        public int Availability { get; set; }
     }
 }

@@ -11,6 +11,8 @@ namespace DBLayer.Repositories.Interfaces
     {
         Task<List<Item>> GetItemFromOffice(int officeId);
         Task<ItemOffice> GetItemOfficeById(int officeId, int itemId);
-        
+        Task<string> GetRLSEmail(int officeId);
+
+
     }
 }

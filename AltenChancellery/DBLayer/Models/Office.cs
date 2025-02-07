@@ -11,6 +11,8 @@ namespace DBLayer.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string? Address { get; set; }
+        public string? RlsId { get; set; }
+        public virtual User Rls { get; set; }
         public virtual List<ItemOffice> ItemOffices { get; set; }
         public virtual List<User> Users { get; set; }
     }
