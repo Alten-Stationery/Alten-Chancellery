@@ -21,13 +21,93 @@
                 </div>
             </div>
             <ul class="sidebar-nav">
+
                 <li class="=" sidebar-item">
-                    <a href="#"></a>
+                <i class="lni lni-user-1"></i>
+                <span>Profile</span>
+                    <a href="#" class="sidebar-link"></a>
                 </li>
+
+            <li class="=" sidebar-item">
+                <i class="lni lni-agenda"></i>
+                <span>Task</span>
+                <a href="#" class="sidebar-link"></a>
+            </li>
+
+            <li class="=" sidebar-item">
+
+                <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#lauth" aria-expanded="false" aria-controls="auth">
+
+                    <i class="lni lni-protection"></i>
+                    <span>Auth</span>
+                </a>
+
+                <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar"></ul>
+                    
+                    <li class="sidebar-item">
+                        <a href ="#" class="sidebar-link">Login</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link">Register</a>
+                    </li>
+
+            </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                        data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
+                        <i class="lni lni-layout-9"></i>
+                        <span>Multi Level</span>
+                        </a>
+
+                <ul id="multi" id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
+                           data-bs-target="#multi-two" aria-expanded="false" aria-controls="multi-two">
+
+                           Two Links
+                        </a>
+
+                        <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse" ></ul>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Link 1</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Link 2</a>
+                            </li>
+                    </li>
+                </ul>
+        </li>
+        <li class="=" sidebar-item">
+            <i class="lni lni-popup"></i>
+            <span>Notification</span>
+            <a href="#" class="sidebar-link"></a>
+        </li>
+
+
+        <li class="=" sidebar-item">
+            <i class="lni lni-cog"></i>
+            <span>Setting</span>
+            <a href="#" class="sidebar-link"></a>
+        </li>
             </ul>
 
-        </aside>
+            <div class="sidebar-footer">
+                <a href="#" class="sidebar-link">
+                <i class="lni lni-exit"></i>
+                    <span>Logout</span>
 
+                </a>
+            </div>
+
+        </aside>
+        <div class="<i class="lni lni-exit"></i>">
+            <div class="text-center">
+                <h1>
+                    Sidebar Bootstrap 5
+                </h1>
+            </div>
+        </div>
     </div>
 
 
