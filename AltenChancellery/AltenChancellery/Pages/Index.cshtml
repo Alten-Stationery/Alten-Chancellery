@@ -6,50 +6,11 @@
 
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">AltenChancellery</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item d-flex align-items-center">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Refill">Refill</a>
-                    </li>
-                    <div class="nav-item dropdown ms-auto">
-                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> 
-                            <img src="placeholder.jpg" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;"> Nome Utente
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown"> 
-                            <li><a class="dropdown-item" href="#">Profile</a></li> 
-                            <li><a class="dropdown-item" href="#">Options</a></li> 
-                            <li><hr class="dropdown-divider"></li> 
-                            <li><a class="dropdown-item" asp-area="" asp-page="/SignIn/Logout">Logout</a></li> 
-                        </ul>
-                    </div>
-                </ul>
-            </div>
-        </div>
+        
     </nav>
 </header>
 
-<section class="d-flex justify-content-center">
-    <table class="table w-50">
-        <thead>
-            <tr>
-                <th scope="col">Item</th>
-                <th scope="col">Quantity</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items)
-            {
-                <tr>
-                    <td scope="row">@item.Key</td>
-                    <td>@item.Value</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</section>
+<body>
+    
+
+</body>

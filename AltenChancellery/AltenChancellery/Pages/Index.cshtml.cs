@@ -13,6 +13,7 @@ namespace AltenChancellery.Pages
         private readonly ITokenService _tokenService;
 
         public IDictionary<string, int> Items { get; set; } // TODO: change type to items
+        public string nomeUtente { get; set; }
 
         public IndexModel(ITokenService tokenService)
         {
@@ -33,6 +34,8 @@ namespace AltenChancellery.Pages
                 { "Subwoofer", 2 },
                 { "Rum", 3 },
             };
+
+            nomeUtente = "Admin";
 
             return await TokenCheckProceedings();
         }
