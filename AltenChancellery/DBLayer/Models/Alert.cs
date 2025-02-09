@@ -12,7 +12,6 @@ namespace DBLayer.Models
         public int ItemId { get; set; }
         public int OfficeId { get; set; }
         public DateTime Date { get; set; }
-        public int mytest { get; set; }
 
         public virtual ItemOffice ItemOffice { get; set; } = null!;
     }
