@@ -59,7 +59,8 @@ var mapperConfig = new MapperConfiguration(cfg =>
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
 
-
+//Read mail settings from appsettings
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("Brevo"));
 
 //Add Services
 
@@ -75,6 +76,7 @@ builder.Services.AddScoped<IOfficeService, OfficeService>();
 builder.Services.AddScoped<IItemOfficeService, ItemOfficeService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IAlertService,  AlertService>();
+builder.Services.AddScoped<IMailService, MailService>();
 
 
 
@@ -231,7 +233,7 @@ async Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserMana
                     .Select(fi => fi.GetValue(null).ToString())
                     .ToList();
 
-    // Creazione dei ruoli
+    //Creazione dei ruoli
     foreach (var roleName in roleNames)
     {
         if (!await roleManager.RoleExistsAsync(roleName))
