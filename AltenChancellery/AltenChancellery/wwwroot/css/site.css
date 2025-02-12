@@ -37,8 +37,9 @@ body {
 }
 
 #sidebar {
-    width: 100px;
+    width: 120px;
     min-width: 70px;
+    max-height: 70%
     z-index: 1000;
     transition: all .25s ease-in-out;
     background-color: #0e2238;
@@ -55,16 +56,15 @@ body {
     background-color: transparent;
     cursor: pointer;
     border: 0;
-    padding: 1rem 1.5rem;
+    padding: 2rem 1.5rem;
+    width: 100%;
+
 }
 
-    .toggle-btn i {
-        font-size: 1.5rem;
-        color: #FFF;
-    }
+ 
 
 .sidebar-logo {
-    margin: auto 0;
+    margin: auto;
 }
 
     .sidebar-logo a {
@@ -84,16 +84,16 @@ body {
 }
 
 a.sidebar-link {
-    padding: .625rem 1.625rem;
+    padding: .625rem 2.2rem;
     color: #FFF;
     display: block;
     font-size: 0.9rem;
     white-space: nowrap;
-    border-left: 3px solid transparent;
+    border-left: 5px solid transparent;
 }
 
 .sidebar-link i {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     margin-right: .75rem;
 }
 
@@ -140,8 +140,8 @@ a.sidebar-link:hover {
 }
 
 .logo{
-    width:100%;
-    height:100%;
+    width:60%;
+    max-width: 70px;
 }
 
 .water{
@@ -149,3 +149,9 @@ a.sidebar-link:hover {
     
 }
 
+.sidebar-footer{
+
+    margin-top: 40%;
+}
+
+#sidebar
