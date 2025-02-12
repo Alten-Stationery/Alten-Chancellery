@@ -41,7 +41,7 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddDbContext<ApplicationDBContext>(
     options =>
     {
-        options.UseSqlServer(connectionString);
+        options.UseNpgsql(connectionString);
         options.EnableSensitiveDataLogging();
     }
     ); 

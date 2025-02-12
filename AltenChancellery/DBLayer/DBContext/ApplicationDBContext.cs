@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,53 +12,59 @@ using System.Threading.Tasks;
 
 namespace DBLayer.DBContext
 {
-    public class ApplicationDBContext: IdentityDbContext<User, IdentityRole, string>
-    {
-        public DbSet<Office> Office { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<Item> Item { get; set; }
-        public DbSet<ItemOffice> ItemOffice { get; set; }
-        public DbSet<Alert> Alert { get; set; }
+	public class ApplicationDBContext : IdentityDbContext<User, IdentityRole, string>
+	{
+		public DbSet<Office> Office { get; set; }
+		public DbSet<RefreshToken> RefreshTokens { get; set; }
+		public DbSet<Item> Item { get; set; }
+		public DbSet<ItemOffice> ItemOffice { get; set; }
+		public DbSet<Alert> Alert { get; set; }
 
-        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
-        {
+		public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
+		{
 
-        }
-        
-       
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
+		}
 
-            builder.Entity<Office>()
-            .HasOne(o => o.Rls)
-            .WithOne()
-            .HasForeignKey<Office>(o => o.RlsId);
 
-            //Configurazione della chiave composta per Enrollment
-            builder.Entity<ItemOffice>()
-                .HasKey(e => new { e.OfficeId, e.ItemId });
+		protected override void OnModelCreating(ModelBuilder builder)
+		{
+			base.OnModelCreating(builder);
 
-            // Configurazione delle relazioni
-            builder.Entity<ItemOffice>()
-                .HasOne(e => e.Office)
-                .WithMany(s => s.ItemOffices)
-                .HasForeignKey(e => e.OfficeId);
+			builder.Entity<Office>()
+			.HasOne(o => o.Rls)
+			.WithOne()
+			.HasForeignKey<Office>(o => o.RlsId);
 
-            builder.Entity<ItemOffice>()
-                .HasOne(e => e.Item)
-                .WithMany(c => c.ItemOffices)
-                .HasForeignKey(e => e.ItemId);
+			//Configurazione della chiave composta per Enrollment
+			builder.Entity<ItemOffice>()
+				.HasKey(e => new { e.OfficeId, e.ItemId });
 
-           builder.Entity<Alert>()
-                .HasKey(a => a.AlertId); // Configura la chiave primaria
+			// Configurazione delle relazioni
+			builder.Entity<ItemOffice>()
+				.HasOne(e => e.Office)
+				.WithMany(s => s.ItemOffices)
+				.HasForeignKey(e => e.OfficeId);
 
-            builder.Entity<Alert>()
-                .HasOne(a => a.ItemOffice) // Relazione con ItemOffice
-                .WithMany(io => io.Alerts) // ItemOffice ha molti Alert
-                .HasForeignKey(a => new { a.ItemId, a.OfficeId }) // Chiave esterna composta
-                .HasPrincipalKey(io => new { io.ItemId, io.OfficeId }); // Chiave composta principale in ItemOffice
-        }
+			builder.Entity<ItemOffice>()
+				.HasOne(e => e.Item)
+				.WithMany(c => c.ItemOffices)
+				.HasForeignKey(e => e.ItemId);
 
-    }
+			builder.Entity<Alert>()
+				 .HasKey(a => a.AlertId); // Configura la chiave primaria
+
+			builder.Entity<Alert>()
+				.HasOne(a => a.ItemOffice) // Relazione con ItemOffice
+				.WithMany(io => io.Alerts) // ItemOffice ha molti Alert
+				.HasForeignKey(a => new { a.ItemId, a.OfficeId }) // Chiave esterna composta
+				.HasPrincipalKey(io => new { io.ItemId, io.OfficeId }); // Chiave composta principale in ItemOffice
+		}
+
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			optionsBuilder.ConfigureWarnings(warnings => warnings
+				.Ignore(RelationalEventId.PendingModelChangesWarning));
+		}
+
+	}
 }
