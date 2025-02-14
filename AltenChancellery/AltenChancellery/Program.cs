@@ -89,6 +89,18 @@ builder.Services.AddValidatorsFromAssembly(typeof(UserValidator).Assembly);
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddServerSideBlazor();
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins(configuration.GetSection("Client:Url").Value!)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddRazorPages(options =>
 {
     //options.Conventions.AuthorizePage("/Index");
@@ -215,6 +227,8 @@ void Startup()
 
 app.UseRouting();
 app.MapControllers();
+
+app.UseCors();
 
 app.UseAuthorization();
 
