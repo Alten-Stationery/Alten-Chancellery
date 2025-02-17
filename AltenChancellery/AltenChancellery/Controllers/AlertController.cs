@@ -14,16 +14,7 @@ namespace AltenChancellery.Controllers
             _alertService = alertService;
         }
 
-        [HttpGet]
-        [Route("Get")]
-        public async Task<IActionResult> Get(int alertId)
-        {
-            var res = await _alertService.GetById(alertId);
-            return Ok(res);
-        }
-
         [HttpPost]
-        [Route("Add")]
         public async Task<IActionResult> Add(AlertDTO alertDTO)
         {
             var res = await _alertService.Add(alertDTO);
@@ -32,7 +23,15 @@ namespace AltenChancellery.Controllers
         }
 
         [HttpGet]
-        [Route("GetAll")]
+        [Route("{alertId}")]
+        public async Task<IActionResult> Get(int alertId)
+        {
+            var res = await _alertService.GetById(alertId);
+            return Ok(res);
+        }
+
+        [HttpGet]
+        [Route("getAll")]
         public async Task<IActionResult> GetAll()
         { 
             var res = await _alertService.GetAll();
@@ -40,7 +39,6 @@ namespace AltenChancellery.Controllers
 
         }
         [HttpPut]
-        [Route("Update")]
         public async Task<IActionResult> Update(AlertDTO alertDTO)
         {
             var res = await _alertService.Update(alertDTO);
@@ -48,7 +46,7 @@ namespace AltenChancellery.Controllers
         }
 
         [HttpDelete]
-        [Route("Remove")]
+        [Route("{id}")]
         public async Task<IActionResult> Remove(int id)
         {
             var res = await _alertService.Remove(id);

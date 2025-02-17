@@ -16,7 +16,6 @@ namespace AltenChancellery.Controllers
         }
 
         [HttpPost]
-        [Route("AddUser")]
         public async Task<IActionResult> AddUser([FromBody] UserDTO user)
         {
             try
@@ -31,7 +30,7 @@ namespace AltenChancellery.Controllers
 
         }
         [HttpGet]
-        [Route("FindUserById")]
+        [Route("{id}")]
         public async Task<IActionResult> FindUserById(string id)
         {
             try
@@ -45,7 +44,7 @@ namespace AltenChancellery.Controllers
             }
         }
         [HttpDelete]
-        [Route("DeleteUserById")]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteUserByID(string id)
         {
             try
@@ -60,7 +59,6 @@ namespace AltenChancellery.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateUser")]
         public async Task<IActionResult> UpdateUser(UserDTO user)
         {
             try

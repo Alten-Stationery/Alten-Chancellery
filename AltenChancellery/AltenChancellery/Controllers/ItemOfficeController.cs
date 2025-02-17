@@ -14,9 +14,7 @@ namespace AltenChancellery.Controllers
             _itemOfficeService = itemOfficeService;
         }
 
-
         [HttpPost]
-        [Route("Add")]
         public async Task<IActionResult> AddItem(ItemOfficeDTO itemDTO)
         {
             var res = await _itemOfficeService.AddItemOffice(itemDTO);
@@ -24,14 +22,13 @@ namespace AltenChancellery.Controllers
 
         }
         [HttpGet]
-        [Route("Find")]
-        public async Task<IActionResult> Find(int itemId, int officeId)
+        public async Task<IActionResult> Find([FromQuery]int itemId, [FromQuery]int officeId)
         {
             var res = await _itemOfficeService.GetItemOfficeById(itemId, officeId);
             return Ok(res);
         }
         [HttpGet]
-        [Route("FindAll")]
+        [Route("getAll")]
         public async Task<IActionResult> GetAll()
         {
             var res = await _itemOfficeService.GetAllItemOffices();
@@ -39,7 +36,6 @@ namespace AltenChancellery.Controllers
 
         }
         [HttpPut]
-        [Route("Update")]
         public async Task<IActionResult> Update(ItemOfficeDTO itemDTO)
         {
             var res = await _itemOfficeService.UpdateItemOffice(itemDTO);
@@ -47,8 +43,7 @@ namespace AltenChancellery.Controllers
 
         }
         [HttpDelete]
-        [Route("Remove")]
-        public async Task<IActionResult> Remove(int itemId, int officeId)
+        public async Task<IActionResult> Remove([FromQuery] int itemId, [FromQuery] int officeId)
         {
             var res = await _itemOfficeService.RemoveItemOffice(itemId, officeId);
             return Ok(res);
